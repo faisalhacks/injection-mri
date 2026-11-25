@@ -1,0 +1,10 @@
+[   31.6s] inline {'pure': 0.7, 'mixed': 0.016666666666666666, 'ignore': 0.2833333333333333}
+[   34.4s] newline {'pure': 0.8333333333333334, 'mixed': 0.0, 'ignore': 0.16666666666666666}
+[   37.3s] escape {'pure': 0.65, 'mixed': 0.016666666666666666, 'ignore': 0.3333333333333333}
+
+--- stderr (tail) ---
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loading weights:  87%|████████▋ | 253/290 [00:00<00:00, 1349.69it/s]
+Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1519.36it/s]

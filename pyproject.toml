@@ -1,0 +1,27 @@
+[project]
+name = "injection-mri"
+version = "0.1.0"
+description = "Probe and ablate a residual-stream direction for indirect prompt-injection following"
+requires-python = ">=3.10,<3.13"
+license = "MIT"
+dependencies = [
+    "torch>=2.2",
+    "transformers>=4.44",
+    "numpy",
+    "scikit-learn",
+    "matplotlib",
+    "psutil",
+]
+
+[tool.uv]
+package = false
+# fonttools 4.69.0 on PyPI ships no cp312 wheel; pin below it.
+constraint-dependencies = ["fonttools<4.69"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

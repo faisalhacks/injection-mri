@@ -1,0 +1,17 @@
+{
+  "inline": {
+    "pure": 0.5833333333333334,
+    "mixed": 0.0,
+    "ignore": 0.4166666666666667
+  },
+  "newline": {
+    "pure": 0.65,
+    "mixed": 0.0,
+    "ignore": 0.35
+  },
+  "escape": {
+    "pure": 0.7,
+    "mixed": 0.0,
+    "ignore": 0.3
+  }
+}

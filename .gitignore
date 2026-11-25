@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+cache/
+*.npy
+*.npz
+!results/*/probe.npz
+*.log
+!results/modal_*.log
+scratch_*.py
