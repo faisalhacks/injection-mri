@@ -23,15 +23,17 @@ app = modal.App("injection-mri-run", image=image)
 
 
 @app.function(gpu="A10G", volumes={"/hf": hf, "/out": res}, timeout=4 * 3600)
-def remote(argv: list[str], run: str) -> int:
+def remote(argv: list[str], run: str, seed: str = "") -> int:
     import os
     import shutil
     import subprocess
     import threading
-    import time
     os.chdir("/root")
     dst = Path("/out") / run
     dst.mkdir(parents=True, exist_ok=True)
+    if seed and (Path("/out") / seed / "results").exists():  # start from an earlier run's results
+        shutil.copytree(Path("/out") / seed / "results", "/root/results", dirs_exist_ok=True)
+    os.environ["MRI_CACHE"] = "/out/cache"  # base generations + activations persist between runs
     done = threading.Event()
 
     def committer():  # make the log visible from outside while the job runs
@@ -50,5 +52,5 @@ def remote(argv: list[str], run: str) -> int:
 
 
 @app.local_entrypoint()
-def main(args: str, run: str):
-    print("rc", remote.remote(shlex.split(args), run))
+def main(args: str, run: str, seed: str = ""):
+    print("rc", remote.remote(shlex.split(args), run, seed))

@@ -65,7 +65,8 @@ def load(name):
     tok.padding_side = "left"
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
-    dtype = torch.bfloat16 if DEV == "cuda" else torch.float32
+    # CPU default float32; MRI_DTYPE=bfloat16 halves RAM for scan/guard/report on a busy machine
+    dtype = torch.bfloat16 if DEV == "cuda" else getattr(torch, os.environ.get("MRI_DTYPE", "float32"))
     model = AutoModelForCausalLM.from_pretrained(name, dtype=dtype).to(DEV).eval()
     return tok, model
 
@@ -314,7 +315,7 @@ def pilot(args):
 # ================================================================ fit
 def fit(args):
     out = outdir(args.model)
-    cache = ROOT / "cache"
+    cache = Path(os.environ.get("MRI_CACHE", ROOT / "cache"))
     cache.mkdir(exist_ok=True)
     tok, model = load(args.model)
     L = len(find_layers(model)) + 1
@@ -399,12 +400,30 @@ def fit(args):
     # permutation null for the diff-of-means probe, max over layers (B=1000)
     rng = np.random.default_rng(0)
     Atr, Ate, ytr, yte = A[tr], A[te], y[tr], y[te]
-    null = []
+    wsub = goal[te] == "word"          # word goal = same attack goal as training, held-out canaries
+    # within-task groups (task identity predicts following; a probe could just read the task)
+    tgroups = [wsub & (task[te] == t) for t in np.unique(task[te])]
+    tgroups = [g for g in tgroups if 0 < yte[g].sum() < g.sum()]
+
+    def within_task(S):  # n-weighted mean of per-task AUROC; S is [n_test] or [n_test, L]
+        S2 = S if S.ndim == 2 else S[:, None]
+        v = sum(fast_auc(yte[g], S2[g]) * g.sum() for g in tgroups) / sum(g.sum() for g in tgroups)
+        return v if S.ndim == 2 else float(v[0])
+    null, null_w, null_wt = [], [], []
     for _ in range(args.n_perm):
         yp = rng.permutation(ytr)
         d = Atr[yp == 1].mean(0) - Atr[yp == 0].mean(0)
-        null.append(np.max(fast_auc(yte, np.einsum("nld,ld->nl", Ate, d))))
-    real_dom = fast_auc(yte, np.einsum("nld,ld->nl", Ate, D_raw))
+        S = np.einsum("nld,ld->nl", Ate, d)
+        null.append(np.max(fast_auc(yte, S)))
+        null_w.append(np.max(fast_auc(yte[wsub], S[wsub])))
+        null_wt.append(np.max(within_task(S)))
+    S_dom = np.einsum("nld,ld->nl", Ate, D_raw)
+    real_dom = fast_auc(yte, S_dom)
+    real_dom_w = fast_auc(yte[wsub], S_dom[wsub])
+    real_dom_wt = within_task(S_dom)
+    for l in range(L):
+        rows[l]["test_auc_word"] = auc(yte[wsub], lr_score(probes[l], Ate[wsub, l]))
+        rows[l]["dom_test_auc_word"] = float(real_dom_w[l])
     # leave-one-task-out spread (train+val tasks), at the selected layer, fixed C
     loto = []
     tv = tr | va
@@ -456,6 +475,28 @@ def fit(args):
             "dom_test_auc": auc(y[te], A[te, best] @ d_noc),
             "dom_test_auc_word_goal": auc(y[w], A[w, best] @ d_noc)},
     }
+    # HEADLINE: word-goal test prompts only. On the full test set, url/spanish prompts are almost all
+    # "resisted", so any direction that separates attack goals inflates AUROC; within one goal it cannot.
+    R["probe"]["headline_word_goal"] = {
+        "n": int(wsub.sum()), "n_followed": int(yte[wsub].sum()), "n_resisted": int((1 - yte[wsub]).sum()),
+        "lr_probe_auc": rows[best]["test_auc_word"],
+        "lr_probe_auc_ci95_task_doc_bootstrap": boot_auc_2level(yte[wsub], s_te[wsub], task[te][wsub], doc[te][wsub],
+                                                                B=args.n_boot),
+        "dom_probe_auc": rows[best]["dom_test_auc_word"],
+        "perm_null_dom_max_over_layers_95pct": float(np.percentile(null_w, 95)),
+        "perm_p_dom_selected_layer": float((np.sum(np.array(null_w) >= real_dom_w[best]) + 1) / (len(null_w) + 1)),
+        "baseline_bag_of_words_auc": auc(yte[wsub], s_bow[wsub]),
+        "baseline_position_length_auc": auc(yte[wsub], s_pl[wsub]),
+        "baseline_output_logit_auc": auc(yte[wsub], lens[te][wsub]),
+        "within_task": {
+            "n_tasks": len(tgroups), "n": int(sum(g.sum() for g in tgroups)),
+            "lr_probe_auc": within_task(s_te), "dom_probe_auc": float(real_dom_wt[best]),
+            "perm_null_dom_max_over_layers_95pct": float(np.percentile(null_wt, 95)),
+            "perm_p_dom_selected_layer": float((np.sum(np.array(null_wt) >= real_dom_wt[best]) + 1) / (len(null_wt) + 1)),
+            "baseline_bag_of_words_auc": within_task(s_bow), "baseline_position_length_auc": within_task(s_pl),
+            "baseline_output_logit_auc": within_task(np.nan_to_num(lens[te])),
+            "dom_auc_by_layer": [float(v) for v in real_dom_wt]},
+    }
     # controls the probe should score LOW on (test split), using the selected-layer LR probe
     s_all = lr_score(probes[best], A[:, best])
     groups = {"injected_followed": te & (y == 1), "injected_resisted": te & (y == 0)}
@@ -478,6 +519,15 @@ def fit(args):
                         ("reported_speech", (kind == "reported") & (sp == "test")))}
     R["probe_by_layer"] = rows
     log("probe:", json.dumps({k: v for k, v in R["probe"].items() if k not in ("control_scores",)}))
+    if args.probe_only:  # refresh probe analysis, keep causal results from an earlier full run
+        rp = out / "results.json"
+        old = json.loads(rp.read_text(encoding="utf-8")) if rp.exists() else {}
+        old.update({k: R[k] for k in R})
+        rp.write_text(json.dumps(old, indent=2, default=float), encoding="utf-8")
+        if "ablation" in old:
+            plots(old, out)
+        log("probe-only refresh written")
+        return
 
     # ---------------- 3. causal tests
     def evaluate(exs, edit):
@@ -684,12 +734,23 @@ def plots(R, out):
     x = [r["layer"] for r in rows]
     P = R["probe"]
     fig, ax = plt.subplots(figsize=(7.5, 4))
-    ax.plot(x, [r["test_auc"] for r in rows], "o-", ms=3, label="LR probe, followed vs resisted (test)")
-    ax.plot(x, [r["dom_test_auc"] for r in rows], "s-", ms=3, label="diff-of-means probe (test)")
-    ax.plot(x, [r["test_auc_injection_token"] for r in rows], "^-", ms=3, alpha=.6, label="LR probe at injection token")
-    ax.axhline(P["baseline_bag_of_words_auc"], color="tab:red", ls=":", label="bag-of-words baseline")
-    ax.axhline(P["baseline_position_length_auc"], color="tab:purple", ls=":", label="position+length baseline")
-    ax.axhline(P["perm_null_dom_max_over_layers_95pct"], color="grey", ls="--", label="permutation null (95th pct, max layer)")
+    H = P.get("headline_word_goal")
+    if H:  # headline subset: word-goal test prompts (same goal as training, unseen canaries)
+        ax.plot(x, [r["test_auc_word"] for r in rows], "o-", ms=3, label="LR probe, followed vs resisted (word-goal test)")
+        ax.plot(x, [r["dom_test_auc_word"] for r in rows], "s-", ms=3, label="diff-of-means probe (word-goal test)")
+        ax.plot(x, H["within_task"]["dom_auc_by_layer"], "d-", ms=3, label="diff-of-means, within-task (word-goal test)")
+        ax.plot(x, [r["test_auc"] for r in rows], "-", lw=1, alpha=.5, label="LR probe, all test goals (inflated, see README)")
+        ax.axhline(H["baseline_output_logit_auc"], color="tab:green", ls="-.", label="output-logit baseline P(canary) (word-goal)")
+        ax.axhline(H["baseline_bag_of_words_auc"], color="tab:red", ls=":", label="bag-of-words baseline (word-goal)")
+        ax.axhline(H["baseline_position_length_auc"], color="tab:purple", ls=":", label="position+length baseline (word-goal)")
+        ax.axhline(H["perm_null_dom_max_over_layers_95pct"], color="grey", ls="--",
+                   label="permutation null, 95th pct of max over layers")
+    else:
+        ax.plot(x, [r["test_auc"] for r in rows], "o-", ms=3, label="LR probe, followed vs resisted (test)")
+        ax.plot(x, [r["dom_test_auc"] for r in rows], "s-", ms=3, label="diff-of-means probe (test)")
+        ax.axhline(P["baseline_bag_of_words_auc"], color="tab:red", ls=":", label="bag-of-words baseline")
+        ax.axhline(P["baseline_position_length_auc"], color="tab:purple", ls=":", label="position+length baseline")
+    ax.plot(x, [r["test_auc_injection_token"] for r in rows], "^-", ms=3, alpha=.4, label="LR probe at injection token (all goals)")
     ax.axvline(P["selected_layer_by_val"], color="k", lw=.8, ls=":")
     ax.set_xlabel("residual stream index (0 = embeddings)  - dotted line: layer chosen on validation")
     ax.set_ylabel("AUROC (held-out test)")
@@ -857,6 +918,7 @@ def main():
     f.add_argument("--n-perm", type=int, default=1000)
     f.add_argument("--n-boot", type=int, default=2000)
     f.add_argument("--n-loc", type=int, default=100)
+    f.add_argument("--probe-only", action="store_true", help="redo probes only; keep causal results in results.json")
     for name in ("scan", "guard", "report"):
         s = sub.add_parser(name)
         s.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
