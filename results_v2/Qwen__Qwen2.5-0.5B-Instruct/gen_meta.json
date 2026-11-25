@@ -1,0 +1,18 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "NVIDIA A10G",
+  "dtype": "torch.bfloat16",
+  "n": 1560,
+  "max_new_tokens": 96,
+  "torch": "2.6.0+cu124",
+  "n_resid": 25,
+  "revision": null,
+  "stage_sec": {
+    "activations": 16.6,
+    "generation": 239.2,
+    "attention": 19.4,
+    "deberta": 31.1
+  },
+  "transformers": "5.24.1",
+  "total_sec": 313.9
+}

@@ -176,12 +176,17 @@ def build_examples(limit=0, dev=False, seed=0):
 
 def gen(args):
     out = outdir2(args.model)
+    if getattr(args, "real", False):      # amendment A1: real attack text, separate output folder
+        out = out / "real"
+        out.mkdir(exist_ok=True)
     g = out / "gen"
     g.mkdir(exist_ok=True)
     t0 = time.time()
     tok, model = mri.load(args.model)
     L = len(mri.find_layers(model)) + 1
-    ex = build_examples(args.limit, args.dev)
+    ex = D.build_real() if getattr(args, "real", False) else build_examples(args.limit, args.dev)
+    if getattr(args, "real", False) and args.limit:
+        ex = ex[:args.limit]
     gpu = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu"
     meta = {"model": args.model, "device": gpu, "dtype": str(next(model.parameters()).dtype), "n": len(ex),
             "max_new_tokens": MAX_NEW, "torch": torch.__version__, "n_resid": L,

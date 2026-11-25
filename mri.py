@@ -933,6 +933,7 @@ def main():
     v.add_argument("--at-bs", type=int, default=4)
     v.add_argument("--limit", type=int, default=0)
     v.add_argument("--dev", action="store_true", help="dev subset of hosts only")
+    v.add_argument("--real", action="store_true", help="amendment A1: real attack text set (LLMail-Inject, BIPIA)")
     v = sub.add_parser("v2fit", help="v2: grouped-CV probes, baselines, H1-H3 (CPU)")
     v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     v.add_argument("--layer-step", type=int, default=1)
@@ -943,6 +944,9 @@ def main():
     v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     v.add_argument("--bs", type=int, default=8)
     v.add_argument("--limit", type=int, default=0)
+    v = sub.add_parser("v2real-eval", help="v2: amendment A1 / H6, real attack text transfer (CPU)")
+    v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
+    v.add_argument("--n-boot", type=int, default=1000)
     v = sub.add_parser("v2blame-eval", help="v2: H4 metrics from blame_raw.json (CPU)")
     v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     v.add_argument("--n-boot", type=int, default=1000)
@@ -967,6 +971,10 @@ def main():
     elif a.cmd == "v2blame":
         import v2
         v2.blame_run(a)
+    elif a.cmd == "v2real-eval":
+        import v2
+        import v2_analysis
+        v2_analysis.real_eval(v2.outdir2(a.model), n_boot=a.n_boot)
     elif a.cmd == "v2blame-eval":
         import v2
         import v2_analysis
