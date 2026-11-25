@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 RAW = Path(sys.argv[1])
-OUT = Path(__file__).parent / "data_v2" / "hosts.jsonl"
+OUT = Path(sys.argv[2]) / "hosts.jsonl" if len(sys.argv) > 2 else Path(__file__).parent / "data_v2" / "hosts.jsonl"
 rng = random.Random(0)
 hosts = []
 
@@ -136,8 +136,8 @@ for lab in (0, 1):
             doc=f"{r['title'].strip()}. {r['content'].strip()}", sep=" ",
             meta={"label": "positive" if lab == 1 else "negative"})
 
-OUT.parent.mkdir(exist_ok=True)
-with open(OUT, "w", encoding="utf-8") as f:
+OUT.parent.mkdir(parents=True, exist_ok=True)
+with open(OUT, "w", encoding="utf-8", newline="\n") as f:
     for h in hosts:
         f.write(json.dumps(h, ensure_ascii=False) + "\n")
 from collections import Counter

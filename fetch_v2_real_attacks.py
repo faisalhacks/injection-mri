@@ -5,7 +5,7 @@
   uv run --with ijson fetch_v2_real_attacks.py <raw>
 
 LLMail-Inject: only submissions labelled attack_attempt=True with reason api_triggered (the attack made the challenge
-assistant call the send-email API), single-line-ish, 80-500 characters, mostly ASCII. E-mail addresses are redacted to [address].
+assistant call the send-email API), single-line-ish, 80-500 characters, mostly ASCII. E-mail addresses are redacted to [address] (also in the BIPIA strings: one BIPIA attack contains an address, which the models saw unredacted).
 BIPIA: every attack sentence of text_attack_train/test.json (the code attacks are not used: they need a code judge).
 No text is edited otherwise. No model was used to write or select these strings.
 """
@@ -18,7 +18,7 @@ from pathlib import Path
 import ijson
 
 RAW = Path(sys.argv[1])
-OUT = Path(__file__).parent / "data_v2" / "real_attacks.jsonl"
+OUT = Path(sys.argv[2]) / "real_attacks.jsonl" if len(sys.argv) > 2 else Path(__file__).parent / "data_v2" / "real_attacks.jsonl"
 rng = random.Random(0)
 rows = []
 
@@ -41,8 +41,8 @@ for sp in ("train", "test"):
     d = json.load(open(RAW / f"bipia_repo/benchmark/text_attack_{sp}.json", encoding="utf-8"))
     for cat, lst in d.items():
         for t in lst:
-            rows.append(dict(family="bipia_real", goal="taskswap", text=t.strip(), category=cat, source="BIPIA text attacks (microsoft/BIPIA, MIT)"))
-with open(OUT, "w", encoding="utf-8") as f:
+            rows.append(dict(family="bipia_real", goal="taskswap", text=red(t.strip()), category=cat, source="BIPIA text attacks (microsoft/BIPIA, MIT)"))
+with open(OUT, "w", encoding="utf-8", newline="\n") as f:
     for r in rows:
         f.write(json.dumps(r, ensure_ascii=False) + "\n")
 print(len(rows), sum(r["family"] == "llmail_real" for r in rows), sum(r["family"] == "bipia_real" for r in rows))

@@ -53,10 +53,11 @@ class Run:
     def __init__(self, out):
         self.out = Path(out)
         self.P = [json.loads(l) for l in open(self.out / "prompts.jsonl", encoding="utf-8")]
-        G = {g["id"]: g for g in map(json.loads, open(self.out / "generations.jsonl", encoding="utf-8"))}
+        gp = self.out / "generations.jsonl"      # not committed (third-party text); labels.jsonl has the same rows without output
+        G = {g["id"]: g for g in map(json.loads, open(gp if gp.exists() else self.out / "labels.jsonl", encoding="utf-8"))}
         self.N = len(self.P)
         for p in self.P:
-            p.update({k: G[p["id"]][k] for k in ("follow", "task_ok", "degenerate", "output")})
+            p.update({k: G[p["id"]].get(k, "") if k == "output" else G[p["id"]][k] for k in ("follow", "task_ok", "degenerate", "output")})
         g = self.out / "gen"
         self.A_last = np.load(g / "A_last.npy", mmap_mode="r")
         self.A_doc = np.load(g / "A_doc.npy", mmap_mode="r")
@@ -449,7 +450,7 @@ def deploy(R, y, cand, layers, n_jobs, out):
         P[f"f{k}_heads"] = np.array([divmod(int(i), R.S["attn_instr"].shape[2]) for i in h])
         sel_layers.append(l)
         log("deploy fold", k, "layer", l)
-    # final probe: the layer most often chosen across host folds (ties: median), C refit on val=fold 4
+    # final probe: the MEDIAN of the layers chosen across host folds (not the most frequent one), C refit on val=fold 4
     lay = int(np.median(sel_layers))
     allc = cand
     tr, va = allc & (R.fold != 4), allc & (R.fold == 4)

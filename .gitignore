@@ -8,3 +8,12 @@ cache/
 *.log
 !results/modal_*.log
 scratch_*.py
+
+# third-party text is not shipped: rebuild with fetch_v2_data.py / v2_rebuild_prompts.py (see README)
+data_v2/hosts.jsonl
+data_v2/real_attacks.jsonl
+results_v2/*/prompts.jsonl
+results_v2/*/real/prompts.jsonl
+results_v2/*/generations.jsonl
+results_v2/*/real/generations.jsonl
+results_v2/*/audit_sample_full.csv

@@ -29,7 +29,9 @@ for lab in ("pure", "mixed", "ignore"):
 for kind in ("clean", "hardneg"):
     pool = [g for g in G if g["kind"] == kind]
     rows += [pool[i] for i in rng.permutation(len(pool))[:20]]
-with open(out / "audit_sample.csv", "w", newline="", encoding="utf-8") as f:
+# audit_sample_full.csv has the text to read (gitignored: it contains third-party text); audit_sample.csv has ids, labels and the
+# hand-label columns only and is the committed file. The committed one is never overwritten (it holds the hand labels).
+with open(out / "audit_sample_full.csv", "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f)
     w.writerow(["id", "kind", "family", "goal", "neg_type", "task", "params", "injected_text", "output", "auto_follow", "auto_task_ok",
                 "hand_follow", "hand_task_ok"])
@@ -38,6 +40,14 @@ with open(out / "audit_sample.csv", "w", newline="", encoding="utf-8") as f:
         inj = " || ".join(p["doc_text"][a:b] for a, b in p["inj_spans"])
         w.writerow([g["id"], g["kind"], g["family"], g["goal"], g["neg_type"], g["task"], json.dumps(p["params"]), inj[:400],
                     g["output"].replace("\n", "\\n")[:500], g["follow"], g["task_ok"], "", ""])
+if not (out / "audit_sample.csv").exists():
+    with open(out / "audit_sample.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["id", "kind", "family", "goal", "neg_type", "task", "stratum", "auto_follow", "auto_task_ok", "hand_follow",
+                    "hand_task_ok", "labeler", "note"])
+        for g in rows:
+            w.writerow([g["id"], g["kind"], g["family"], g["goal"], g["neg_type"], g["task"], "v2_report_sample", g["follow"],
+                        g["task_ok"], "", "", "", "not labelled"])
 
 # ---- plots
 fig, axes = plt.subplots(1, 3, figsize=(15, 4))

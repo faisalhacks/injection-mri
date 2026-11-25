@@ -5,6 +5,7 @@
   # CPU stages (v2fit, v2blame-eval) run locally on the fetched folder; then push probe_v2.npz + blame_set.json +
   # prompts.jsonl + generations.jsonl + gen_meta.json back with `modal volume put` and run v2blame.
 
+Needs data_v2/hosts.jsonl and data_v2/real_attacks.jsonl locally (not in git: run fetch_v2_data.py first).
 The run folder is exposed to mri.py through MRI_V2_OUT, so v2 files land in <run>/<model>/ . HF weights are cached in the
 volume `injection-mri-hf`. Hard budget for the whole v2 task is USD 10 (A10G list price assumed USD 1.10/h).
 """
