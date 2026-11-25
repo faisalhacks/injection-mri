@@ -925,8 +925,57 @@ def main():
         s.add_argument("--prompt-file", required=True)
         s.add_argument("--max-new", type=int, default=64)
         s.add_argument("--out", default="")
+    for name in ("scan", "guard", "report"):  # v2: goal-agnostic probe + per-sentence blame (results_v2/<model>/)
+        sub.choices[name].add_argument("--v2", action="store_true", help="use the v2 goal-agnostic probe and blame map")
+    v = sub.add_parser("v2gen", help="v2: generations + activations + attention + deberta baseline (GPU)")
+    v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
+    v.add_argument("--bs", type=int, default=16)
+    v.add_argument("--at-bs", type=int, default=4)
+    v.add_argument("--limit", type=int, default=0)
+    v.add_argument("--dev", action="store_true", help="dev subset of hosts only")
+    v = sub.add_parser("v2fit", help="v2: grouped-CV probes, baselines, H1-H3 (CPU)")
+    v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
+    v.add_argument("--layer-step", type=int, default=1)
+    v.add_argument("--jobs", type=int, default=8)
+    v.add_argument("--n-boot", type=int, default=1000)
+    v.add_argument("--n-perm", type=int, default=200)
+    v = sub.add_parser("v2blame", help="v2: causal blame runs on the blame set (GPU)")
+    v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
+    v.add_argument("--bs", type=int, default=8)
+    v.add_argument("--limit", type=int, default=0)
+    v = sub.add_parser("v2blame-eval", help="v2: H4 metrics from blame_raw.json (CPU)")
+    v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
+    v.add_argument("--n-boot", type=int, default=1000)
+    v = sub.add_parser("blame", help="per-sentence causal blame map for a prompt file (v2 probe)")
+    v.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
+    v.add_argument("--prompt-file", required=True)
+    v.add_argument("--regen", action="store_true", help="also regenerate with the top-blamed sentence deleted")
+    v.add_argument("--out", default="", help="write an HTML report")
     a = ap.parse_args()
-    {"pilot": pilot, "fit": fit, "scan": scan, "guard": guard_cmd, "report": report}[a.cmd](a)
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if a.cmd in ("scan", "guard", "report") and getattr(a, "v2", False):
+        import v2_cli
+        {"scan": v2_cli.scan_v2, "guard": v2_cli.guard_v2, "report": v2_cli.report_v2}[a.cmd](a)
+    elif a.cmd == "v2gen":
+        import v2
+        v2.gen(a)
+    elif a.cmd == "v2fit":
+        import v2
+        import v2_analysis
+        v2_analysis.fit(v2.outdir2(a.model), layer_step=a.layer_step, n_jobs=a.jobs, n_boot=a.n_boot, n_perm=a.n_perm)
+    elif a.cmd == "v2blame":
+        import v2
+        v2.blame_run(a)
+    elif a.cmd == "v2blame-eval":
+        import v2
+        import v2_analysis
+        v2_analysis.blame_eval(v2.outdir2(a.model), n_boot=a.n_boot)
+    elif a.cmd == "blame":
+        import v2_cli
+        v2_cli.blame_cmd(a)
+    else:
+        {"pilot": pilot, "fit": fit, "scan": scan, "guard": guard_cmd, "report": report}[a.cmd](a)
 
 
 if __name__ == "__main__":

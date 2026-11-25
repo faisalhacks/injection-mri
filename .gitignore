@@ -4,6 +4,7 @@ cache/
 *.npy
 *.npz
 !results/*/probe.npz
+!results_v2/*/probe_v2.npz
 *.log
 !results/modal_*.log
 scratch_*.py
