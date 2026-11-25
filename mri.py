@@ -5,6 +5,8 @@
   uv run mri.py scan  --model Qwen/Qwen2.5-0.5B-Instruct --prompt-file x.txt   # per-layer score + token heatmap
   uv run mri.py guard --model ... --prompt-file x.txt     # generate; ablate the direction only if the probe fires
   uv run mri.py report --model ... --prompt-file x.txt    # one self-contained HTML file
+  uv run mri.py culprits --model M --mode bypass|overrefusal [--verify]   # refusal module, see refusal.py
+  uv run mri.py fix --model M --mode ... --k 50 --prompt-file f           # demo intervention, outputs redacted
 """
 import argparse
 import collections
@@ -925,8 +927,11 @@ def main():
         s.add_argument("--prompt-file", required=True)
         s.add_argument("--max-new", type=int, default=64)
         s.add_argument("--out", default="")
+    import refusal
+    refusal.add_args(sub)
     a = ap.parse_args()
-    {"pilot": pilot, "fit": fit, "scan": scan, "guard": guard_cmd, "report": report}[a.cmd](a)
+    {"pilot": pilot, "fit": fit, "scan": scan, "guard": guard_cmd, "report": report,
+     "culprits": refusal.run_culprits, "fix": refusal.run_fix}[a.cmd](a)
 
 
 if __name__ == "__main__":
