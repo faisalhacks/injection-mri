@@ -1,0 +1,18 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "device": "NVIDIA A10",
+  "dtype": "torch.bfloat16",
+  "n": 300,
+  "max_new_tokens": 96,
+  "torch": "2.6.0+cu124",
+  "n_resid": 29,
+  "revision": null,
+  "stage_sec": {
+    "activations": 26.9,
+    "generation": 96.6,
+    "attention": 27.3,
+    "deberta": 5.7
+  },
+  "transformers": "5.24.1",
+  "total_sec": 168.8
+}
