@@ -2779,7 +2779,10 @@
    "H3_alpaca_rise_under_2pp": false,
    "H3_mmlu_drop_under_2pp": true,
    "H3": false,
-   "H1": true
+   "H1": true,
+   "n_eval": 221,
+   "min_n_for_verdict": 30,
+   "H1_status": "tested"
   },
   "exploratory_spec": {
    "k": 50,

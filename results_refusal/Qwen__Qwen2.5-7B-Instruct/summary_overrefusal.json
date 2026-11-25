@@ -2928,11 +2928,15 @@
    "H3_mmlu_drop_under_2pp": true,
    "H3": true,
    "H2_unsafe_compliance_rise_le_2pp": false,
-   "H2": false,
+   "H2": "untestable",
    "unsafe_compliance_rise_ci": [
     0.22,
     0.345
-   ]
+   ],
+   "n_eval": 23,
+   "min_n_for_verdict": 30,
+   "H2_criteria_met_if_tested": false,
+   "H2_status": "untestable (n=23 < 30)"
   },
   "exploratory_spec": {
    "k": 50,

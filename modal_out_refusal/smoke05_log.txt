@@ -1,81 +1,0 @@
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5747.74it/s]
-Generating harmful split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating harmful split: 100%|██████████| 100/100 [00:00<00:00, 14296.98 examples/s]
-Generating benign split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating benign split: 100%|██████████| 100/100 [00:00<00:00, 18078.12 examples/s]
-Generating train split:   0%|          | 0/666 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 666/666 [00:00<00:00, 47382.81 examples/s]
-Generating train split:   0%|          | 0/1405 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 1405/1405 [00:00<00:00, 51330.04 examples/s]
-Generating train split:   0%|          | 0/450 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 450/450 [00:00<00:00, 73595.76 examples/s]
-Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1319 examples [00:00, 227282.65 examples/s]
-Generating train split:   0%|          | 0/51760 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 51760/51760 [00:00<00:00, 81162.77 examples/s]Generating train split: 100%|██████████| 51760/51760 [00:00<00:00, 81076.81 examples/s]
-Generating test split:   0%|          | 0/14042 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 14042/14042 [00:00<00:00, 287378.10 examples/s]
-Generating validation split:   0%|          | 0/1531 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 1531/1531 [00:00<00:00, 139182.86 examples/s]
-Generating dev split:   0%|          | 0/285 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 285/285 [00:00<00:00, 63489.31 examples/s]
-Generating auxiliary_train split:   0%|          | 0/99842 [00:00<?, ? examples/s]Generating auxiliary_train split:  21%|██        | 21000/99842 [00:00<00:00, 202920.74 examples/s]Generating auxiliary_train split:  45%|████▌     | 45000/99842 [00:00<00:00, 217318.51 examples/s]Generating auxiliary_train split:  71%|███████   | 71000/99842 [00:00<00:00, 229499.76 examples/s]Generating auxiliary_train split: 100%|██████████| 99842/99842 [00:00<00:00, 245285.99 examples/s]
-[   30.5s] generate plain: 14 new of 14
-[   33.0s] generate alpaca: 24 new of 24
-[   36.0s] generate wrapped_train: 24 new of 24
-[   39.0s] generate wrapped_val: 12 new of 12
-[   40.5s] generate wrapped_test: 32 new of 32
-[   43.8s] generate pool_test: 15 new of 15
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 4666.46it/s]
-[   51.9s] judge audit: {'available': True, 'n': 121, 'agreement': 0.9752066115702479, 'kappa': 0.9436247864575243, 'phrase_refusal_rate': 0.3305785123966942, 'judge_refusal_rate': 0.32231404958677684}
-[   51.9s] baseline refusal rates {'plain': 0.5714285714285714, 'alpaca': 0.041666666666666664, 'wrapped_train': 0.16666666666666666, 'wrapped_val': 0.25, 'wrapped_test': 0.5625, 'pool_test': 0.4}
-[   51.9s] pairs: 12 {'fam:Guidelines': 3, 'plat:discord': 11, 'date:early': 11, 'kw:refusal_suppression': 11, 'fam:Toxic': 1, 'plat:reddit': 1, 'fam:unlabelled': 4, 'fam:Opposite': 3, 'fam:Anarchy': 1, 'date:late': 1, 'kw:other': 1}
-[   55.8s] direction layer 14 val effect 1.3251338799794516
-[   56.0s] metric gap clean-corrupt 3.602670431137085
-[   56.0s] attribution patching over 12 pairs
-[   56.7s] exact patching 32 units x 4 pairs
-[   58.2s] AtP vs exact: {'neurons': {'n': 24, 'pearson': 0.6809846792889828, 'spearman': 0.6043478260869565}, 'heads': {'n': 8, 'pearson': 0.4976728493966023, 'spearman': 0.6190476190476191}, 'n_pairs': 4}
-
-Top culprit neurons (bypass), exact-patch effect on M (clean-ward), mean [95% CI over 4 pairs]
-  L13 N3656   atp_rank 2    effect +0.237 [+0.197,+0.276] (6.8% of gap)
-  L20 N3978   atp_rank 0    effect +0.215 [-0.000,+0.431] (6.2% of gap)
-  L13 N1203   atp_rank 17   effect +0.117 [+0.086,+0.147] (3.4% of gap)
-  L20 N4028   atp_rank 4    effect +0.115 [+0.034,+0.195] (3.3% of gap)
-  L23 N900    atp_rank 5    effect +0.097 [-0.036,+0.231] (2.8% of gap)
-  L20 N4647   atp_rank 3    effect +0.095 [+0.021,+0.169] (2.7% of gap)
-  L21 N20     atp_rank 1    effect +0.079 [+0.007,+0.152] (2.3% of gap)
-  L13 N3971   atp_rank 20   effect +0.078 [+0.040,+0.116] (2.3% of gap)
-  L23 N3383   atp_rank 9    effect +0.075 [-0.055,+0.206] (2.2% of gap)
-  L 9 N3832   atp_rank 10   effect +0.067 [+0.046,+0.089] (1.9% of gap)
-Top culprit heads (bypass)
-  L22 H12  atp_rank 0    effect +0.237 [-0.001,+0.474] (6.8% of gap)
-  L12 H2   atp_rank 5    effect +0.218 [+0.084,+0.352] (6.3% of gap)
-  L21 H11  atp_rank 3    effect +0.158 [-0.104,+0.420] (4.6% of gap)
-  L22 H5   atp_rank 1    effect +0.123 [-0.093,+0.338] (3.6% of gap)
-  L17 H12  atp_rank 4    effect +0.111 [-0.009,+0.231] (3.2% of gap)
-  L21 H6   atp_rank 2    effect +0.056 [+0.027,+0.085] (1.6% of gap)
-  L22 H9   atp_rank 7    effect +0.029 [-0.028,+0.086] (0.8% of gap)
-  L21 H5   atp_rank 6    effect +0.023 [+0.003,+0.043] (0.7% of gap)
-Generating test split:   0%|          | 0/4358 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 4358/4358 [00:00<00:00, 277822.52 examples/s]
-Generating train split:   0%|          | 0/36718 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 36718/36718 [00:00<00:00, 880177.71 examples/s]
-Generating validation split:   0%|          | 0/3760 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 3760/3760 [00:00<00:00, 483330.26 examples/s]
-[   63.4s] verification eval cells: 3
-
-H5a overlap (fam): groups ['fam:Guidelines', 'fam:Opposite', 'fam:unlabelled']  J_between 0.30952380952380953  J_within 0.5529581529581529  null99 0.0  -> shared
-  Jaccard top-10 neuron matrix:
-                    idelines Opposite labelled
-  fam:Guidelines        1.00     0.43     0.25
-  fam:Opposite          0.43     1.00     0.25
-  fam:unlabelled        0.25     0.25     1.00
-
-H5a overlap (kw): groups ['kw:refusal_suppression']  J_between None  J_within 0.5201465201465201  null99 0.0  -> untestable
-  Jaccard top-10 neuron matrix:
-                    pression
-  kw:refusal_suppression    1.00
-H6a bypass rate by platform: {'discord': 0.8611111111111112, 'website': 0.0} gap 0.861 p=0.0070
-H6a bypass rate by datebin: {'early': 0.9642857142857143, 'late': 0.25} gap 0.714 p=0.0062
-Traceback (most recent call last):
-  File "/root/mri.py", line 938, in <module>
-    main()
-  File "/root/mri.py", line 933, in main
-    {"pilot": pilot, "fit": fit, "scan": scan, "guard": guard_cmd, "report": report,
-  File "/root/refusal.py", line 845, in run_culprits
-    path = write_report(summary, pub / f"report_{mode}.html")
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/root/refusal.py", line 1284, in write_report
-    h.append(f"<h2>Causal verification ({label}); n={V.get('n_eval')}, baseline {V.get('baseline_outcome_rate'):.3f}</h2>" + tbl(rows, ["config", "rate", "ci"]))
-                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: unsupported format string passed to NoneType.__format__
-
-RC 1

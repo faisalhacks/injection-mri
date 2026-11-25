@@ -2932,7 +2932,10 @@
    "unsafe_compliance_rise_ci": [
     0.025,
     0.08
-   ]
+   ],
+   "n_eval": 156,
+   "min_n_for_verdict": 30,
+   "H2_status": "tested"
   },
   "exploratory_spec": {
    "k": 50,

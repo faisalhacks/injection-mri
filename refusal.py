@@ -863,6 +863,26 @@ def run_culprits(a):
 
 
 # ---------------------------------------------------------------- verification
+MIN_EVAL_N = 30  # pre-registration (H4): fewer than 30 eligible test items -> "untestable", not "supported"/"falsified"
+
+
+def apply_min_n_rule(verdict, n_eval, mode, min_n=MIN_EVAL_N):
+    """If the held-out eval set has fewer than min_n items, the pre-registered hypothesis (H1 in bypass mode, H2 in
+    overrefusal mode) is "untestable". The criteria computed on the small set are kept under *_criteria_met_if_tested
+    for transparency but must not be read as a verdict. Idempotent; mutates and returns `verdict`."""
+    key = "H2" if mode == "overrefusal" else "H1"
+    verdict["n_eval"] = int(n_eval)
+    verdict["min_n_for_verdict"] = min_n
+    if n_eval < min_n:
+        if isinstance(verdict.get(key), bool):
+            verdict[f"{key}_criteria_met_if_tested"] = verdict[key]
+        verdict[key] = "untestable"
+        verdict[f"{key}_status"] = f"untestable (n={int(n_eval)} < {min_n})"
+    else:
+        verdict[f"{key}_status"] = "tested"
+    return verdict
+
+
 def verify(c):
     tok, model, a, D, mode, summary = c["tok"], c["model"], c["a"], c["D"], c["mode"], c["summary"]
     L, H, dh, I = c["L"], c["H"], c["dh"], c["I"]
@@ -1023,6 +1043,7 @@ def verify(c):
         verdict["unsafe_compliance_rise_ci"] = s50["xs_unsafe_compliance"]["ci"]
     else:
         verdict["H1"] = bool(h12)
+    apply_min_n_rule(verdict, V["n_eval"], mode)
     V["verdict"] = verdict
     # exploratory: side-effect-aware arm, same criteria as the pre-registered primary comparison, no verdict claimed
     sp = outs[f"spec_k{pk}"]
@@ -1378,7 +1399,7 @@ def run_fix(a):
         log("demo prompts are built from public data in memory and are never printed")
     else:
         raw = Path(a.prompt_file).read_text("utf8")
-        prompts = [p.strip() for p in (raw.split("\n---\n") if "\n---\n" in raw else raw.splitlines()) if p.strip()]
+        prompts = [p.strip() for p in (raw.split("\n---\n") if "\n---\n" in raw else raw.splitlines()) if p.strip() and not p.lstrip().startswith("#")]  # '#' lines = comments/provenance
     RC = ([int(x) for x in Z["RC0"]], [int(x) for x in Z["RC1"]])
 
     def score(texts, sp):

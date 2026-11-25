@@ -88,6 +88,17 @@ def test_stats():
     assert abs(est - 0.8) < 1e-9 and lo <= est <= hi
 
 
+def test_min_n_rule():
+    v = R.apply_min_n_rule(dict(H2=False), 23, "overrefusal")
+    assert v["H2"] == "untestable" and v["H2_criteria_met_if_tested"] is False
+    v = R.apply_min_n_rule(dict(H2=True), 30, "overrefusal")
+    assert v["H2"] is True and v["H2_status"] == "tested"
+    v = R.apply_min_n_rule(dict(H1=True), 29, "bypass")
+    assert v["H1"] == "untestable"
+    v = R.apply_min_n_rule(v, 29, "bypass")  # idempotent
+    assert v["H1"] == "untestable" and v["H1_criteria_met_if_tested"] is True
+
+
 if __name__ == "__main__":
     for name, f in list(globals().items()):
         if name.startswith("test_"):
