@@ -74,3 +74,22 @@ uv tool run modal run --detach modal_app.py --run 7b --args "fit --model Qwen/Qw
 `scan` prints per-layer probe scores, the prompt-length baseline score and the top tokens by projection. Layer detection is generic (Qwen/Llama/Olmo-style); a probe only applies to the model it was fit on. `MRI_DTYPE=bfloat16` halves CPU RAM. Fit time on an A10G: 0.5B 5.6 min, 7B 28 min.
 
 Built with an AI coding agent. MIT licence.
+
+---
+
+# Refusal culprits (branch `refusal`): which neurons and heads cause jailbreak bypass and over-refusal?
+
+A defensive-interpretability module for model developers. It finds the MLP neurons and attention heads that causally decide (A) jailbreak bypass (refused plain, complied under a public in-the-wild jailbreak template) and (B) over-refusal (benign but risky-looking request refused), then checks on held-out behaviours and held-out templates whether patching them back fixes the behaviour at low side-effect cost.
+
+**Safety handling.** Model completions to harmful requests are never printed and never committed. Raw generations are kept only in `results_refusal/_private/` (gitignored) for label auditing. Committed files and reports contain IDs, labels, scores, unit indices, aggregate rates and benign public text. Harmful requests and jailbreak templates are fetched from public datasets at run time and are not stored in the repo. No new jailbreaks were written and no attack was optimised. `mri.py fix` prints REFUSE/COMPLY and a redaction marker. Data and licences: `docs/DATA_SOURCES_REFUSAL.md`. Pre-registration (written before any main-model run): `docs/PREREGISTRATION_REFUSAL.md`. Related work and what is replication: `docs/RELATED_WORK.md` (addendum).
+
+```
+uv run mri.py culprits --model Qwen/Qwen2.5-0.5B-Instruct --mode bypass --verify      # ranked units + CI, controls, side effects, HTML report
+uv run mri.py culprits --model Qwen/Qwen2.5-0.5B-Instruct --mode overrefusal --verify
+uv run mri.py culprits --model ... --mode bypass --smoke                              # tiny CPU smoke test
+uv run mri.py fix --model ... --mode overrefusal --k 50 --prompt-file examples/overrefusal_benign.txt
+uv run mri.py fix --model ... --mode bypass --k 50 --demo 8                          # held-out wrapped prompts built in memory, never printed
+uv tool run modal run modal_refusal.py --run r7b --gpu a100 --args "culprits --model Qwen/Qwen2.5-7B-Instruct --mode bypass --verify"
+```
+
+Reports go to `results_refusal/<model>/report_<mode>.html`; numbers to `summary_<mode>.json`. Method and design choices are in `refusal.py`; tests on a tiny random model: `uv run python tests_refusal.py`.

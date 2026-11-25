@@ -1277,11 +1277,13 @@ def write_report(S, path):
         h.append("<h2>Top neurons by exact patching effect (clean-ward, metric M units)</h2>" + tbl([fmt(t) for t in ct["neurons"][:10]], cols))
         h.append("<h2>Top attention heads</h2>" + tbl([fmt(t) for t in ct["heads"][:10]], cols))
     V = S.get("verify")
-    if V and "configs" in V:
+    if V and V.get("error"):
+        h.append(f"<p class=note>Verification skipped: {esc(V['error'])} (eligible items: {esc(V.get('n_eval'))}).</p>")
+    if V and "verdict" in V:
         rows = [dict(config=k, rate=f"{v['rate']:.3f}", ci=f"[{v['ci'][0]:.3f}, {v['ci'][1]:.3f}]") for k, v in V["configs"].items()
                 if not re.search(r"_\d+$", k)]
         label = "restore rate on held-out bypass cells" if mode == "bypass" else "over-refusal reduction on held-out prompts"
-        h.append(f"<h2>Causal verification ({label}); n={V.get('n_eval')}, baseline {V.get('baseline_outcome_rate'):.3f}</h2>" + tbl(rows, ["config", "rate", "ci"]))
+        h.append(f"<h2>Causal verification ({label}); n={V.get('n_eval')}, baseline {V.get('baseline_outcome_rate', float('nan')):.3f}</h2>" + tbl(rows, ["config", "rate", "ci"]))
         h.append(f"<p>Primary comparison: {esc(V.get('primary'))}</p><p>Heads: {esc(V.get('primary_heads'))}</p>")
         srows = []
         for nm, d in V["side"].items():
