@@ -65,3 +65,14 @@ Heads at every k; k=10 and 200 for neurons; direction baseline vs units (smalles
 - The in-the-wild dataset ends in Dec 2023; families are the dataset authors' community clusters, not a taxonomy of attack mechanism.
 - OR-Bench-Hard prompts may include a few genuinely borderline requests.
 - 0.5B-scale models refuse inconsistently; the results may not transfer to larger safety-tuned models.
+
+---
+
+## Amendment 1 (2026-11-25 UTC, before any 1.5B or 7B result was produced)
+
+State at the time: the 0.5B dev model had been run in both modes. H1-H6 definitions, thresholds, splits and controls above are **unchanged**. What the dev run showed, recorded here so it cannot be used to quietly reshape the hypotheses: at k=50 the culprit neurons restored refusal under jailbreak far above random same-layer and activation-difference controls (0.741 vs random p95 0.070 and diff 0.077, n=259 held-out cells), but they also raised refusal on harmless Alpaca prompts by about 25 pp, and the Arditi direction did so by about 46 pp. So on 0.5B, H3 failed. Over-refusal arm: k=50 units fixed 54% of over-refusals but unsafe-prompt compliance rose, so H2 failed on 0.5B. The 1.5B and 7B runs are judged by the unchanged criteria.
+
+Because the units behave like a general "refusal state" rather than a jailbreak-specific switch, one **exploratory** arm is added to the tool and to every run from here on. It is labelled post-hoc and carries no pass/fail:
+- **Side-effect-aware ranking.** score = culprit score minus lambda x penalty, lambda = 1 fixed now, not tuned. penalty = max(0, sign x mean predicted change of M when the unit is mean-patched on control prompts), by attribution patching. Control prompts: A, the 100 Alpaca direction prompts (harmless, refusal would rise); B, the 50 training harmful JBB behaviours (refusal would fall). Evaluated like the other arms (top-k, same patching, same held-out set, same side-effect sets) for neurons at k in {10, 50, 200} and heads at k in {5, 10, 20}. `mri.py fix --spec` uses it.
+
+Also noted: the platform and date groups in H6 are confounded with family composition (families come from different platforms and dates). H6 will be reported as pre-registered, with that caveat; no stratified test is added.

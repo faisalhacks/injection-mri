@@ -771,6 +771,18 @@ def run_culprits(a):
     score_n = sign * an.mean(0)
     score_h = sign * ah.mean(0)
     se_n = an.std(0, ddof=1) / math.sqrt(len(pairs)) if len(pairs) > 1 else np.zeros_like(score_n)
+    # EXPLORATORY, added after the 0.5B dev run (see PREREGISTRATION amendment): side-effect-aware ranking.
+    # penalty = predicted (attribution-patching) harm of mean-patching the unit on control prompts:
+    # A: harmless prompts whose refusal would rise; B: harmful prompts whose refusal would fall.
+    ctrl_texts = ([x["text"] for x in D["alpaca_dir"]] if mode == "bypass" else [b["text"] for b in beh["train"]])
+    tgt_h_row = cg["h"].mean(0)
+    cn_c = np.broadcast_to(cg["n"].astype(np.float32).mean(0).astype(np.float16), (len(ctrl_texts), L, I))
+    ch_c = np.broadcast_to(tgt_h_row.astype(np.float32), (len(ctrl_texts), L, H * dh))
+    an_c, ah_c, _, _ = atp_pass(tok, model, ctrl_texts, cn_c, ch_c, RC, ell_star, rvec, sd, max(1, a.bs_grad))
+    pen_n = np.maximum(0, sign * an_c.mean(0))
+    pen_h = np.maximum(0, sign * ah_c.mean(0))
+    score_n_spec = score_n - a.spec_lambda * pen_n
+    score_h_spec = score_h - a.spec_lambda * pen_h
     # plain activation-difference baseline (non-causal): Cohen-like d with pooled std
     mc, mx = tgt_n, st["mean_n"]
     sdn = np.sqrt(0.5 * (cg["n"].astype(np.float32).var(0) + np.maximum(st["sq_n"] - st["mean_n"] ** 2, 0)) + 1e-8)
@@ -825,13 +837,16 @@ def run_culprits(a):
     # ---------- save arrays for `fix`
     order_n = np.argsort(-score_n, axis=None)[:400]
     order_h = np.argsort(-score_h, axis=None)[:60]
-    np.savez(pub / f"fix_{mode}.npz", order_n=order_n, order_h=order_h, tgt_n=tgt_n, tgt_h=tgt_h, shape_n=np.array([L, I]),
+    order_n_spec = np.argsort(-score_n_spec, axis=None)[:400]
+    order_h_spec = np.argsort(-score_h_spec, axis=None)[:60]
+    np.savez(pub / f"fix_{mode}.npz", order_n=order_n, order_h=order_h, order_n_spec=order_n_spec, order_h_spec=order_h_spec, tgt_n=tgt_n, tgt_h=tgt_h, shape_n=np.array([L, I]),
              shape_h=np.array([L, H]), dh=dh, dir_vec=dirs[ell_star], dir_layer=ell_star, RC0=np.array(RC[0]), RC1=np.array(RC[1]),
              rvec=rvec, sd=np.array(sd))
     summary["fix_ready"] = True
 
     # ---------- causal verification on held-out data
     ctx = dict(tok=tok, model=model, a=a, D=D, G=G, labsets=labsets, summary=summary, score_n=score_n, score_h=score_h,
+               score_n_spec=score_n_spec, score_h_spec=score_h_spec,
                diff_n=diff_n, diff_h=diff_h, tgt_n=tgt_n, tgt_h=tgt_h, dir_spec=dir_spec, extra_dirs=extra_dirs,
                L=L, H=H, dh=dh, I=I, mode=mode, beh=beh, tplE=tplE, tpl_by=tpl_by, w_test=(w_test if mode == "bypass" else None),
                pairs=pairs, an=an, ah=ah, sign=sign, cell_text=cell_text, text_of=text_of, w_train=(w_train if mode == "bypass" else None),
@@ -914,6 +929,7 @@ def verify(c):
         un = top_units(sc_n, k)
         specs[f"units_k{k}"] = dict(n=spec_n(un, tgt_n))
         specs[f"diff_k{k}"] = dict(n=spec_n(top_units(c["diff_n"], k), tgt_n))
+        specs[f"spec_k{k}"] = dict(n=spec_n(top_units(c["score_n_spec"], k), tgt_n))  # exploratory
         nrand = a.n_rand if k == a.primary_k else a.n_rand_small
         for j in range(nrand):
             specs[f"rand_k{k}_{j}"] = dict(n=spec_n(same_layer_random(un, I, rng), tgt_n))
@@ -921,6 +937,7 @@ def verify(c):
         uh = top_units(sc_h, k)
         specs[f"heads_k{k}"] = dict(h=spec_h(uh, tgt_h, dh))
         specs[f"hdiff_k{k}"] = dict(h=spec_h(top_units(c["diff_h"], k), tgt_h, dh))
+        specs[f"hspec_k{k}"] = dict(h=spec_h(top_units(c["score_h_spec"], k), tgt_h, dh))  # exploratory
         nrand = a.n_rand_heads if k == a.primary_kh else a.n_rand_small
         for j in range(nrand):
             specs[f"hrand_k{k}_{j}"] = dict(h=spec_h(same_layer_random(uh, H, rng), tgt_h, dh))
@@ -967,6 +984,9 @@ def verify(c):
         side_specs[f"units_k{k}"] = specs[f"units_k{k}"]
     for k in ks_h:
         side_specs[f"heads_k{k}"] = specs[f"heads_k{k}"]
+    for k in ks_n:
+        side_specs[f"spec_k{k}"] = specs[f"spec_k{k}"]
+    side_specs[f"hspec_k{pkh}"] = specs[f"hspec_k{pkh}"]
     side_specs[f"diff_k{pk}"] = specs[f"diff_k{pk}"]
     side_specs[f"rand_k{pk}_0"] = specs[f"rand_k{pk}_0"]
     side_specs["dir"] = specs["dir"]
@@ -1004,6 +1024,11 @@ def verify(c):
     else:
         verdict["H1"] = bool(h12)
     V["verdict"] = verdict
+    # exploratory: side-effect-aware arm, same criteria as the pre-registered primary comparison, no verdict claimed
+    sp = outs[f"spec_k{pk}"]
+    V["exploratory_spec"] = dict(k=pk, rate=float(sp.mean()), rand_p95=P["rand_p95"], above_rand_p95=bool(sp.mean() > P["rand_p95"]),
+                                 side={kk: V["side"][f"spec_k{pk}"][kk] for kk in V["side"][f"spec_k{pk}"]},
+                                 note="post-hoc arm added after the 0.5B dev run; not part of H1-H6")
     summary["verify"] = V
     print("\nVERDICT", json.dumps(verdict))
     print(f"primary k={pk}: units {P['units_rate']:.3f}  random p95 {P['rand_p95']:.3f}  diff-top-k {P['diff_rate']:.3f}  "
@@ -1294,6 +1319,8 @@ def write_report(S, path):
         cols = sorted({k for r in srows for k in r}, key=lambda x: (x != "config", x))
         h.append("<h2>Side effects</h2>" + tbl(srows, cols))
         h.append(f"<h2>Verdicts</h2><pre>{esc(json.dumps(V['verdict'], indent=1))}</pre>")
+        if V.get("exploratory_spec"):
+            h.append(f"<h2>Exploratory: side-effect-aware ranking (post-hoc, not part of H1-H6)</h2><pre>{esc(json.dumps(V['exploratory_spec'], indent=1))}</pre>")
     F = S.get("family")
     if F:
         h.append("<h2>Families, platforms, dates (H5/H6)</h2>")
@@ -1334,8 +1361,9 @@ def run_fix(a):
     L, I = [int(x) for x in Z["shape_n"]]
     H = int(Z["shape_h"][1])
     dh = int(Z["dh"])
-    un = [tuple(int(v) for v in np.unravel_index(i, (L, I))) for i in Z["order_n"][:a.k]]
-    uh = [tuple(int(v) for v in np.unravel_index(i, (L, H))) for i in Z["order_h"][:a.k_heads]] if a.k_heads else []
+    on, oh = (Z["order_n_spec"], Z["order_h_spec"]) if a.spec else (Z["order_n"], Z["order_h"])
+    un = [tuple(int(v) for v in np.unravel_index(i, (L, I))) for i in on[:a.k]]
+    uh = [tuple(int(v) for v in np.unravel_index(i, (L, H))) for i in oh[:a.k_heads]] if a.k_heads else []
     spec = dict(n=spec_n(un, Z["tgt_n"]), h=spec_h(uh, Z["tgt_h"], dh) if uh else None)
     if a.demo:
         D = load_data(a)
@@ -1423,6 +1451,7 @@ def add_args(sub):
     c.add_argument("--n-val-dir", type=int, default=60)
     c.add_argument("--ks", type=int, nargs="+", default=[10, 50, 200])
     c.add_argument("--ks-heads", type=int, nargs="+", default=[5, 10, 20])
+    c.add_argument("--spec-lambda", type=float, default=1.0, help="weight of the predicted side-effect penalty (exploratory arm)")
     c.add_argument("--primary-k", type=int, default=50)
     c.add_argument("--primary-kh", type=int, default=10)
     c.add_argument("--n-rand", type=int, default=20)
@@ -1437,6 +1466,7 @@ def add_args(sub):
     c.add_argument("--bs-patch", type=int, default=48)
     f.add_argument("--k", type=int, default=50, help="number of top culprit neurons to patch")
     f.add_argument("--k-heads", type=int, default=0, help="also patch the top-k culprit heads")
+    f.add_argument("--spec", action="store_true", help="use the side-effect-aware (exploratory) ranking")
     f.add_argument("--prompt-file", default="")
     f.add_argument("--demo", type=int, default=0, help="build N held-out (behaviour, template) prompts from public data; never printed")
     c.set_defaults(families=True)
