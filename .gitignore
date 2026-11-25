@@ -7,3 +7,9 @@ cache/
 *.log
 !results/modal_*.log
 scratch_*.py
+
+# refusal module
+results_refusal/_private/
+results_refusal/**/*.npz
+results_refusal/**/*.npy
+data_refusal/

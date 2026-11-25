@@ -67,3 +67,45 @@ Things that would be overclaiming: "first", "novel direction", "pre-generation d
 3. **Causal protocol.** Run both arms: subtract the direction (following should fall) and add it (following should rise), with matched random directions and a utility guard (#1). Keep the direction only if it passes. Report utility on benign tasks alongside attack reduction, because #1 reports a 93-100% benign-utility range and larger costs when the model must reason over steered content.
 4. **Baselines.** Attention Tracker (#5, training-free) and the TaskTracker activation-delta probe (#3) for detection. For defence, spotlighting or delimiters, prompt sandwich or reminder, and BIPIA's boundary-awareness and reminder defences (#13), plus a classifier filter. Include untrained random-direction probes as the floor (#2) and position-plus-length-only as the shortcut floor (#7).
 5. **Benchmarks and metrics.** BIPIA for text tasks (#13), InjecAgent (#14) and AgentDojo (#15) for agents. Add TaskTracker (#3) for detection and SEP (#17) for data-vs-instruction separation. Metrics used by others: AUROC for detection (#2, #3, #5, #6); attack success rate and compromise rate for defence (#1, #2); benign utility. Split results into successful and unsuccessful injections (#6), and report held-out attack and held-out task-suite generalisation, since #2 and #1 both do. Use matched negatives in training (#7).
+
+---
+
+# Addendum (2026-11-26): refusal, jailbreak and over-refusal mechanisms
+
+Added for the `refusal` branch (`mri.py culprits` / `mri.py fix`). Every ID below was opened at its arXiv abstract page (or project page) on 2026-11-26 and the title, authors and date were read from that page. Content details marked "search summary" come from a web-search result summary of the paper's abstract, not from my own reading of the paper body. I read no full texts.
+
+## A. Verified entries
+
+| # | Paper | Authors, year | URL | What it does (abstract level) |
+|---|---|---|---|---|
+| R1 | Refusal in Language Models Is Mediated by a Single Direction | Arditi et al., 2024 (also #9 above) | https://arxiv.org/abs/2406.11717 | Diff-in-means refusal direction; ablating it removes refusal, adding it induces refusal; 13 chat models. |
+| R2 | Towards Understanding Safety Alignment: A Mechanistic Perspective from Safety Neurons (v1 title: "Finding Safety Neurons in Large Language Models") | Chen, Wang, Yao, Bai, Hou, Li; v1 20 Jun 2024, v2 23 Oct 2025 (NeurIPS 2025 per search summary) | https://arxiv.org/abs/2406.14144 | Generation-time activation contrasting to find safety neurons plus dynamic activation patching. Search summary: about 5% of neurons, patching them restores over 90% of safety performance without hurting general ability. |
+| R3 | How Alignment and Jailbreak Work: Explain LLM Safety through Intermediate Hidden States | Zhou et al., Jun 2024 (Findings of EMNLP 2024 per search summary) | https://arxiv.org/abs/2406.05644 | Weak classifiers on hidden states; logit lens; jailbreaks disrupt the link between early ethical signals and middle-layer refusal formation (logit grafting). |
+| R4 | On the Role of Attention Heads in Large Language Model Safety | Zhou et al., 17 Oct 2024 (ICLR 2025 per search summary) | https://arxiv.org/abs/2410.13708 | Ships/Sahara per-head safety importance. Search summary: ablating one head of Llama-2-7b-chat makes it answer 16x more harmful queries. |
+| R5 | Surgical, Cheap, and Flexible: Mitigating False Refusal in Language Models via Single Vector Ablation | Wang, Hu, Roettger, Plank, 4 Oct 2024 (ICLR 2025) | https://arxiv.org/abs/2410.03415 | False-refusal vector from pseudo-harmful prompts, orthogonalised against the true-refusal vector, then ablated. Reduces false refusal while keeping safety. |
+| R6 | Attribution Patching: Activation Patching At Industrial Scale | Nanda, blog | https://www.neelnanda.io/mechanistic-interpretability/attribution-patching | Gradient-based linear approximation of activation patching (read first 100k characters only). |
+| R7 | Attribution Patching Outperforms Automated Circuit Discovery | Syed, Rager, Conmy, 16 Oct 2023 | https://arxiv.org/abs/2310.10348 | Attribution patching for circuit discovery. |
+| R8 | AtP*: An efficient and scalable method for localizing LLM behaviour to components | Kramar, Lieberum, Shah, Nanda, 1 Mar 2024 | https://arxiv.org/abs/2403.00745 | Improves attribution patching (fixes attention saturation and cancellation); uses it as a pre-filter before exact patching. **Note: the task brief called this "Syed et al. AtP\*"; the AtP\* authors are Kramar et al. Syed et al. is the earlier R7.** |
+| R9 | JailbreakBench: An Open Robustness Benchmark for Jailbreaking Large Language Models | Chao et al., 28 Mar 2024 | https://arxiv.org/abs/2404.01318 | Source of JBB-Behaviors (100 harmful, 100 matched benign). |
+| R10 | XSTest: A Test Suite for Identifying Exaggerated Safety Behaviours in Large Language Models | Roettger et al., 2 Aug 2023 | https://arxiv.org/abs/2308.01263 | 250 safe prompts that look unsafe, plus 200 unsafe contrasts. |
+| R11 | OR-Bench: An Over-Refusal Benchmark for Large Language Models | Cui, Chiang, Stoica, Hsieh, 31 May 2024 | https://arxiv.org/abs/2405.20947 | Over-refusal benchmark, including the "Hard-1K" subset used here. |
+| R12 | "Do Anything Now": Characterizing and Evaluating In-The-Wild Jailbreak Prompts on Large Language Models | Shen, Chen, Backes, Shen, Zhang, 7 Aug 2023 (CCS 2024) | https://arxiv.org/abs/2308.03825 | The In-the-Wild Jailbreak Prompts dataset (Reddit, Discord, websites), with community labels. Source of our wrappers. |
+| R13 | Security Challenges in AI Agent Deployment: Insights from a Large Scale Public Competition (Gray Swan x UK AISI) | Zou et al., 28 Jul 2025 | https://arxiv.org/abs/2507.20526 | Abstract says the ART benchmark is released. The abstract page gives no location or licence; a search summary says the authors intend a private leaderboard. **Not used** (see DATA_SOURCES_REFUSAL.md). |
+| R14 | How Vulnerable Are AI Agents to Indirect Prompt Injections? Insights from a Large-Scale Public Competition | Dziemian et al., 16 Mar 2026 | https://arxiv.org/abs/2603.15714 | Releases a partial set (95 Qwen-generated indirect-injection strings) on HF. **Not used**: indirect injection, not direct jailbreaks. |
+
+## B. What is replication and what is new
+
+**Replication (not novel):**
+- The diff-in-means refusal direction, its ablation and its addition (R1). We run it as the strong baseline.
+- The idea that a few percent of neurons (R2) or a handful of attention heads (R4) carry safety behaviour, and that patching or ablating them changes it. We re-find culprit sets with a different procedure (attribution patching with exact-patch validation), on Qwen2.5 models; this is a replication of the finding type on new models, not a new finding.
+- Mitigating false refusal with an activation-space intervention (R5). Our over-refusal arm is a unit-level variant of R5; R5 works with a single direction.
+- Attribution patching as a fast approximation to patching (R6-R8). We use the plain linear version, then validate on the top 200 by exact patching, in the AtP* "pre-filter then verify" spirit but without the AtP* corrections.
+
+**What I believe is new, to be checked, not claimed:**
+1. Both neuron AND head granularity, in both directions (jailbreak bypass and over-refusal) on one pipeline, with one set of controls. R2 does neurons, R4 does heads, R5 does a direction; I did not find a paper that does all in one comparison. Absence of evidence from a limited search.
+2. Causal verification against matched controls on held-out behaviours AND held-out wrapper templates: same-layer random units, a non-causal activation-difference top-k, and the Arditi direction. How R2/R4 controlled this was not read in full text.
+3. Side-effect checks in the same harness (harmless refusal, unsafe-contrast compliance, MMLU).
+4. **Family analysis (H5/H6, pre-registered):** whether different in-the-wild jailbreak strategy families (using the dataset's own community labels) are mediated by the same units, and whether transfer of culprits across families, platforms and dates holds. I did not find prior work on this question; again limited search.
+5. A one-command report and demo tool. A product contribution, not a finding.
+
+Overclaiming to avoid: "first to find safety neurons/heads", "first to fix over-refusal with steering", "causal" without controls, and any statement that a culprit "is the safety neuron" (interpretation sections are observations only).
