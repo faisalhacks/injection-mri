@@ -1604,5 +1604,100 @@
         }
       }
     }
+  },
+  "H4_blame": {
+    "n_prompts": 150,
+    "n_units_mean": 9.48,
+    "causal_probe_drop": {
+      "top1": 0.9466666666666667,
+      "top3": 0.98
+    },
+    "attention_tracker": {
+      "top1": 1.0,
+      "top3": 1.0
+    },
+    "projection_only": {
+      "top1": 0.8333333333333334,
+      "top3": 0.9333333333333333
+    },
+    "mean_patch_drop_exploratory": {
+      "top1": 0.9666666666666667,
+      "top3": 0.9866666666666667
+    },
+    "random_expected": {
+      "top1": 0.2353457838457838,
+      "top3": 0.5709164724164725
+    },
+    "causal_minus_best_baseline_top1": {
+      "point": -0.053333333333333344,
+      "ci95": [
+        -0.09441168763102722,
+        -0.019867549668874163
+      ]
+    },
+    "verdict": {
+      "margin_ge_0.10": false,
+      "ci_lower_gt_0": false,
+      "supported": false
+    },
+    "behaviour": {
+      "prompts": 150,
+      "planted_deletion_removes_following": 0.9933333333333333,
+      "other_deletion_removes_following": 0.0635079365079365,
+      "top1_blamed_deletion_removes_following": 0.96,
+      "any_unit_removes_following": 0.9933333333333333,
+      "probe_drop_vs_deletion_removes_following_unit_auroc": 0.8859115204425678
+    }
+  },
+  "H4_false_blame_hard_negatives": {
+    "tau_per_host_fold_leave_fold_out": {
+      "0": 0.2792059375019907,
+      "1": 0.23777190086306466,
+      "2": 0.22548014352792312,
+      "3": 0.207728415540899,
+      "4": 0.2870580192758258
+    },
+    "n_calibration": 183,
+    "n_hard_neg": 150,
+    "false_blame_rate": 0.05333333333333334,
+    "injected_test_rate_above_tau": 0.88,
+    "max_drop_auroc_injected_vs_hardneg": 0.9657333333333333,
+    "dev_only_tau": {
+      "n_dev": 33,
+      "tau": 0.24744263416210538,
+      "false_blame_rate": 0.05333333333333334
+    },
+    "by_neg_type": {
+      "benign_imperative": {
+        "n": 29,
+        "false_blame_rate": 0.0,
+        "argmax_is_planted": 0.13793103448275862
+      },
+      "reported_attack": {
+        "n": 25,
+        "false_blame_rate": 0.24,
+        "argmax_is_planted": 0.44
+      },
+      "security_article": {
+        "n": 24,
+        "false_blame_rate": 0.0,
+        "argmax_is_planted": 0.125
+      },
+      "canary_mention": {
+        "n": 23,
+        "false_blame_rate": 0.0,
+        "argmax_is_planted": 0.043478260869565216
+      },
+      "consistent_instruction": {
+        "n": 23,
+        "false_blame_rate": 0.043478260869565216,
+        "argmax_is_planted": 0.34782608695652173
+      },
+      "benign_comment": {
+        "n": 26,
+        "false_blame_rate": 0.038461538461538464,
+        "argmax_is_planted": 0.23076923076923078
+      }
+    }
   }
 }
