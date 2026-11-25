@@ -213,7 +213,7 @@ class Gens:
         self.pub.mkdir(parents=True, exist_ok=True)
 
     def get(self, name, items):
-        f = self.priv / f"gens_{name}.json"
+        f = self.priv / f"gens_{name}_n{self.a.max_new_base}.json"  # keyed by length: smoke runs must not leak in
         cache = json.loads(f.read_text("utf8")) if f.exists() else {}
         todo = [it for it in items if it["id"] not in cache]
         if todo:
@@ -227,7 +227,7 @@ class Gens:
             c = cache[it["id"]]
             lab[it["id"]] = dict(r=int(is_refusal(trunc(self.tok, c["t"]))), f=c["f"])
         (self.pub / f"labels_{name}.json").write_text(json.dumps({k: v["r"] for k, v in lab.items()}), "utf8")
-        return lab, cache
+        return lab, {it["id"]: cache[it["id"]] for it in items}
 
 
 def judge_audit(tok, gens_by_set, labels_by_set, n=300, seed=0):
