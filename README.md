@@ -114,6 +114,7 @@ v1 left two problems: the probe needed training on the attacker's goal, and its 
 - 7B probes used every second layer (layer_step=2) to bound CPU time; 0.5B used all layers.
 - Added after seeing H3: the family-held-out H3 variant (exploratory). Amendment A1 and its H6 were added on the user's request, before any run on that data.
 - `max_new_tokens` is 96, not the suggested 64 (pre-registered).
+- One e-mail address that the LLMail redaction regex missed (a third party's, typed inside one attack string) was replaced by `[address]` in the stored text files after the runs; the prompt the models saw contained it.
 
 **Limitations.** Attack text is mine apart from the A1 strings; hosts are real but short and truncated; one model family; follow-checkers are heuristic and audited only lightly; the 7B probe's best layer is late (20-24 of 28), after the model has largely decided, so this is "detect, not predict early". The injected sentences in blame were found by methods that exploit that the model already follows them. HackAPrompt (gated), Tensor Trust (no licence stated) and Gray Swan ART (no public licensed release found) were not used (see `docs/DATA_SOURCES.md`). Modal spend estimate: about 1 GPU-hour of A10/A10G wall time (about USD 1-2 at an assumed USD 1.10/h; billing was not queried), against a USD 10 cap; all my apps are stopped.
 
