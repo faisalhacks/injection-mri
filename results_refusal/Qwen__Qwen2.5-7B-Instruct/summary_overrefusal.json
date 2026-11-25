@@ -1,0 +1,2984 @@
+{
+ "model": "Qwen/Qwen2.5-7B-Instruct",
+ "mode": "overrefusal",
+ "args": {
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "mode": "overrefusal",
+  "smoke": false,
+  "bs": 24,
+  "max_new_base": 64,
+  "max_new_eval": 32,
+  "n_beh": 100,
+  "per_fam": 12,
+  "n_unl": 24,
+  "max_tpl_chars": 2500,
+  "n_orb": 600,
+  "n_alpaca": 200,
+  "n_mmlu": 400,
+  "n_xs_unsafe": 200,
+  "verify": true,
+  "families": true,
+  "max_train_cells": 1200,
+  "max_val_cells": 100,
+  "pairs_per_group": 40,
+  "min_pairs_family": 15,
+  "n_val_pairs": 24,
+  "n_val_neurons": 150,
+  "n_val_heads": 50,
+  "n_val_dir": 60,
+  "ks": [
+   10,
+   50,
+   200
+  ],
+  "ks_heads": [
+   5,
+   10,
+   20
+  ],
+  "spec_lambda": 1.0,
+  "primary_k": 50,
+  "primary_kh": 10,
+  "n_rand": 20,
+  "n_rand_heads": 10,
+  "n_rand_small": 5,
+  "n_rand_fam": 5,
+  "cap_fam": 40,
+  "cap_eval": 250,
+  "n_boot": 2000,
+  "n_wiki": 200,
+  "bs_grad": 6,
+  "bs_patch": 32,
+  "_final": true
+ },
+ "counts": {
+  "plain": 100,
+  "alpaca": 200,
+  "pool_train": 425,
+  "pool_val": 170,
+  "pool_test": 255,
+  "xs_unsafe": 200
+ },
+ "audit": {
+  "available": true,
+  "n": 300,
+  "agreement": 0.7966666666666666,
+  "kappa": 0.5710669416838551,
+  "phrase_refusal_rate": 0.25666666666666665,
+  "judge_refusal_rate": 0.44666666666666666
+ },
+ "baseline_refusal_rates": {
+  "plain": 0.91,
+  "alpaca": 0.005,
+  "pool_train": 0.15764705882352942,
+  "pool_val": 0.2,
+  "pool_test": 0.09019607843137255,
+  "xs_unsafe": 0.78
+ },
+ "refusal_start_tokens": [
+  "I",
+  "Sorry"
+ ],
+ "comply_start_tokens": [
+  "Certainly",
+  "Creating",
+  "It",
+  "When",
+  "The",
+  "To"
+ ],
+ "n_pairs": 67,
+ "pairs_by_tag": {
+  "src:orbench": 62,
+  "src:xstest": 5
+ },
+ "direction": {
+  "layer": 16,
+  "val_effect_by_layer": {
+   "4": -1.1642105439129997,
+   "5": 0.09034532659194072,
+   "6": 4.056209003224092,
+   "7": 2.0899807986091163,
+   "8": 5.733535738552318,
+   "9": 3.414599979625029,
+   "10": 0.5018794115851908,
+   "11": 0.8158801583682791,
+   "12": 2.4324251343222225,
+   "13": 4.489079391255098,
+   "14": 12.598911229301901,
+   "15": 15.310763331020581,
+   "16": 15.707481889163745,
+   "17": 12.201768510481891,
+   "18": 10.971384609446805,
+   "19": 10.772698767044965,
+   "20": 12.146923177382526,
+   "21": 10.159750068888945,
+   "22": 8.780175770030302,
+   "23": 8.417655047248392,
+   "24": 7.556354999542236
+  },
+  "n_val_prompts": 34,
+  "val_ld_baseline": 2.323736920076258
+ },
+ "false_direction_layer": 16,
+ "metric": {
+  "sd_ld": 5.7901930809021,
+  "sd_proj": 3.376246690750122,
+  "mean_gap_clean_minus_corrupt": -1.887942910194397
+ },
+ "atp_vs_exact": {
+  "neurons": {
+   "n": 150,
+   "pearson": 0.6188258981412981,
+   "spearman": 0.5881381394728655
+  },
+  "heads": {
+   "n": 50,
+   "pearson": 0.6990679744638976,
+   "spearman": 0.5047298919567826
+  },
+  "n_pairs": 24
+ },
+ "culprit_table": {
+  "neurons": [
+   {
+    "kind": "n",
+    "layer": 13,
+    "idx": 4787,
+    "atp": 0.03753471374511719,
+    "atp_rank": 3,
+    "effect": 0.1276182383298874,
+    "ci_lo": 0.009005017578601837,
+    "ci_hi": 0.24623146653175354,
+    "frac_of_gap": 0.055774275213479996
+   },
+   {
+    "kind": "n",
+    "layer": 25,
+    "idx": 17058,
+    "atp": 0.12887126207351685,
+    "atp_rank": 1,
+    "effect": 0.08707428723573685,
+    "ci_lo": 0.04784081131219864,
+    "ci_hi": 0.12630775570869446,
+    "frac_of_gap": 0.038054946810007095
+   },
+   {
+    "kind": "n",
+    "layer": 14,
+    "idx": 13014,
+    "atp": 0.021495560184121132,
+    "atp_rank": 9,
+    "effect": 0.0610601007938385,
+    "ci_lo": -0.019378863275051117,
+    "ci_hi": 0.14149907231330872,
+    "frac_of_gap": 0.02668570727109909
+   },
+   {
+    "kind": "n",
+    "layer": 24,
+    "idx": 5256,
+    "atp": 0.07269996404647827,
+    "atp_rank": 2,
+    "effect": 0.06066487357020378,
+    "ci_lo": 0.03558242321014404,
+    "ci_hi": 0.08574732393026352,
+    "frac_of_gap": 0.026512976735830307
+   },
+   {
+    "kind": "n",
+    "layer": 23,
+    "idx": 9128,
+    "atp": 0.029871569946408272,
+    "atp_rank": 5,
+    "effect": 0.055666644126176834,
+    "ci_lo": 0.020628884434700012,
+    "ci_hi": 0.09070440381765366,
+    "frac_of_gap": 0.024328550323843956
+   },
+   {
+    "kind": "n",
+    "layer": 25,
+    "idx": 18451,
+    "atp": 0.13315337896347046,
+    "atp_rank": 0,
+    "effect": 0.04659609869122505,
+    "ci_lo": 0.013935651630163193,
+    "ci_hi": 0.07925654947757721,
+    "frac_of_gap": 0.02036435902118683
+   },
+   {
+    "kind": "n",
+    "layer": 22,
+    "idx": 2168,
+    "atp": 0.002959943376481533,
+    "atp_rank": 132,
+    "effect": 0.04573742672801018,
+    "ci_lo": 0.017796065658330917,
+    "ci_hi": 0.07367879152297974,
+    "frac_of_gap": 0.01998908631503582
+   },
+   {
+    "kind": "n",
+    "layer": 22,
+    "idx": 5156,
+    "atp": 0.014712147414684296,
+    "atp_rank": 16,
+    "effect": 0.04564895108342171,
+    "ci_lo": 0.014349233359098434,
+    "ci_hi": 0.07694867253303528,
+    "frac_of_gap": 0.019950417801737785
+   },
+   {
+    "kind": "n",
+    "layer": 20,
+    "idx": 7805,
+    "atp": 0.004041498526930809,
+    "atp_rank": 93,
+    "effect": 0.043985914438962936,
+    "ci_lo": 0.01226188987493515,
+    "ci_hi": 0.07570993900299072,
+    "frac_of_gap": 0.01922360435128212
+   },
+   {
+    "kind": "n",
+    "layer": 20,
+    "idx": 1779,
+    "atp": 0.008088535629212856,
+    "atp_rank": 43,
+    "effect": 0.039226073771715164,
+    "ci_lo": 0.024091262370347977,
+    "ci_hi": 0.05436088517308235,
+    "frac_of_gap": 0.017143363133072853
+   },
+   {
+    "kind": "n",
+    "layer": 23,
+    "idx": 9336,
+    "atp": 0.008654623292386532,
+    "atp_rank": 39,
+    "effect": 0.038025278598070145,
+    "ci_lo": -0.0034801512956619263,
+    "ci_hi": 0.07953070849180222,
+    "frac_of_gap": 0.01661856845021248
+   },
+   {
+    "kind": "n",
+    "layer": 14,
+    "idx": 13435,
+    "atp": 0.020075710490345955,
+    "atp_rank": 10,
+    "effect": 0.03395723178982735,
+    "ci_lo": -0.01821315661072731,
+    "ci_hi": 0.0861276239156723,
+    "frac_of_gap": 0.014840668998658657
+   },
+   {
+    "kind": "n",
+    "layer": 21,
+    "idx": 3509,
+    "atp": 0.004979704972356558,
+    "atp_rank": 78,
+    "effect": 0.029234537854790688,
+    "ci_lo": 0.010700764134526253,
+    "ci_hi": 0.04776830971240997,
+    "frac_of_gap": 0.012776662595570087
+   },
+   {
+    "kind": "n",
+    "layer": 13,
+    "idx": 15159,
+    "atp": 0.004155995324254036,
+    "atp_rank": 89,
+    "effect": 0.029115775600075722,
+    "ci_lo": -0.002333385869860649,
+    "ci_hi": 0.06056493520736694,
+    "frac_of_gap": 0.012724759057164192
+   },
+   {
+    "kind": "n",
+    "layer": 22,
+    "idx": 14805,
+    "atp": 0.009993708692491055,
+    "atp_rank": 25,
+    "effect": 0.026232728734612465,
+    "ci_lo": 0.009769316762685776,
+    "ci_hi": 0.042696140706539154,
+    "frac_of_gap": 0.01146475225687027
+   },
+   {
+    "kind": "n",
+    "layer": 23,
+    "idx": 2254,
+    "atp": 0.009199749678373337,
+    "atp_rank": 32,
+    "effect": 0.024344542995095253,
+    "ci_lo": 0.015341713093221188,
+    "ci_hi": 0.033347371965646744,
+    "frac_of_gap": 0.010639538988471031
+   },
+   {
+    "kind": "n",
+    "layer": 14,
+    "idx": 4190,
+    "atp": 0.009737413376569748,
+    "atp_rank": 28,
+    "effect": 0.0240777637809515,
+    "ci_lo": -0.0008645430207252502,
+    "ci_hi": 0.04902007058262825,
+    "frac_of_gap": 0.010522945784032345
+   },
+   {
+    "kind": "n",
+    "layer": 14,
+    "idx": 2624,
+    "atp": 0.008350519463419914,
+    "atp_rank": 40,
+    "effect": 0.021795233711600304,
+    "ci_lo": 0.002532621845602989,
+    "ci_hi": 0.04105784744024277,
+    "frac_of_gap": 0.009525389410555363
+   },
+   {
+    "kind": "n",
+    "layer": 27,
+    "idx": 17078,
+    "atp": 0.016514595597982407,
+    "atp_rank": 13,
+    "effect": 0.020706554874777794,
+    "ci_lo": 0.01137001346796751,
+    "ci_hi": 0.030043095350265503,
+    "frac_of_gap": 0.009049592539668083
+   },
+   {
+    "kind": "n",
+    "layer": 15,
+    "idx": 11344,
+    "atp": 0.023242851719260216,
+    "atp_rank": 7,
+    "effect": 0.01994883082807064,
+    "ci_lo": 0.0026191771030426025,
+    "ci_hi": 0.03727848455309868,
+    "frac_of_gap": 0.008718437515199184
+   },
+   {
+    "kind": "n",
+    "layer": 23,
+    "idx": 18890,
+    "atp": 0.005723753944039345,
+    "atp_rank": 67,
+    "effect": 0.019570400938391685,
+    "ci_lo": 0.009342324919998646,
+    "ci_hi": 0.0297984778881073,
+    "frac_of_gap": 0.008553048595786095
+   },
+   {
+    "kind": "n",
+    "layer": 14,
+    "idx": 10897,
+    "atp": 0.011036394163966179,
+    "atp_rank": 21,
+    "effect": 0.019557088613510132,
+    "ci_lo": 0.00346999429166317,
+    "ci_hi": 0.035644181072711945,
+    "frac_of_gap": 0.008547230623662472
+   },
+   {
+    "kind": "n",
+    "layer": 23,
+    "idx": 17713,
+    "atp": 0.014299494214355946,
+    "atp_rank": 17,
+    "effect": 0.01861601136624813,
+    "ci_lo": 0.006714539602398872,
+    "ci_hi": 0.03051748313009739,
+    "frac_of_gap": 0.008135941810905933
+   },
+   {
+    "kind": "n",
+    "layer": 21,
+    "idx": 5211,
+    "atp": 0.004259364679455757,
+    "atp_rank": 88,
+    "effect": 0.01653754711151123,
+    "ci_lo": 0.004658520221710205,
+    "ci_hi": 0.028416574001312256,
+    "frac_of_gap": 0.007227569818496704
+   },
+   {
+    "kind": "n",
+    "layer": 24,
+    "idx": 3026,
+    "atp": 0.028550874441862106,
+    "atp_rank": 6,
+    "effect": 0.01612742803990841,
+    "ci_lo": 0.007361226715147495,
+    "ci_hi": 0.024893630295991898,
+    "frac_of_gap": 0.007048331201076508
+   }
+  ],
+  "heads": [
+   {
+    "kind": "h",
+    "layer": 13,
+    "idx": 14,
+    "atp": 0.03349323570728302,
+    "atp_rank": 1,
+    "effect": 0.15805691480636597,
+    "ci_lo": 0.01414915919303894,
+    "ci_hi": 0.301964670419693,
+    "frac_of_gap": 0.06907719373703003
+   },
+   {
+    "kind": "h",
+    "layer": 14,
+    "idx": 15,
+    "atp": 0.01323610171675682,
+    "atp_rank": 9,
+    "effect": 0.08622550964355469,
+    "ci_lo": 0.028629116714000702,
+    "ci_hi": 0.14382189512252808,
+    "frac_of_gap": 0.03768399730324745
+   },
+   {
+    "kind": "h",
+    "layer": 25,
+    "idx": 1,
+    "atp": 0.05252910777926445,
+    "atp_rank": 0,
+    "effect": 0.0845119059085846,
+    "ci_lo": 0.03726605698466301,
+    "ci_hi": 0.13175775110721588,
+    "frac_of_gap": 0.03693508356809616
+   },
+   {
+    "kind": "h",
+    "layer": 14,
+    "idx": 14,
+    "atp": 0.015707239508628845,
+    "atp_rank": 6,
+    "effect": 0.07890528440475464,
+    "ci_lo": 0.03246483579277992,
+    "ci_hi": 0.12534573674201965,
+    "frac_of_gap": 0.03448476642370224
+   },
+   {
+    "kind": "h",
+    "layer": 15,
+    "idx": 27,
+    "atp": 0.029731418937444687,
+    "atp_rank": 2,
+    "effect": 0.07147208601236343,
+    "ci_lo": 0.020881157368421555,
+    "ci_hi": 0.12206301093101501,
+    "frac_of_gap": 0.031236160546541214
+   },
+   {
+    "kind": "h",
+    "layer": 14,
+    "idx": 24,
+    "atp": 0.0067093814723193645,
+    "atp_rank": 17,
+    "effect": 0.04326297715306282,
+    "ci_lo": 0.010305952280759811,
+    "ci_hi": 0.07622000575065613,
+    "frac_of_gap": 0.01890765130519867
+   },
+   {
+    "kind": "h",
+    "layer": 15,
+    "idx": 22,
+    "atp": 0.02294565923511982,
+    "atp_rank": 5,
+    "effect": 0.043216805905103683,
+    "ci_lo": 0.006814427673816681,
+    "ci_hi": 0.07961918413639069,
+    "frac_of_gap": 0.01888747327029705
+   },
+   {
+    "kind": "h",
+    "layer": 26,
+    "idx": 26,
+    "atp": 0.026024967432022095,
+    "atp_rank": 4,
+    "effect": 0.03246181085705757,
+    "ci_lo": 0.008449455723166466,
+    "ci_hi": 0.05647416412830353,
+    "frac_of_gap": 0.014187109656631947
+   },
+   {
+    "kind": "h",
+    "layer": 9,
+    "idx": 16,
+    "atp": 0.011508205905556679,
+    "atp_rank": 10,
+    "effect": 0.024118682369589806,
+    "ci_lo": -0.009988667443394661,
+    "ci_hi": 0.05822603404521942,
+    "frac_of_gap": 0.010540829040110111
+   },
+   {
+    "kind": "h",
+    "layer": 14,
+    "idx": 16,
+    "atp": 0.007600393611937761,
+    "atp_rank": 15,
+    "effect": 0.024052759632468224,
+    "ci_lo": -0.01874125562608242,
+    "ci_hi": 0.06684677302837372,
+    "frac_of_gap": 0.010512018576264381
+   },
+   {
+    "kind": "h",
+    "layer": 14,
+    "idx": 27,
+    "atp": 0.0036078887060284615,
+    "atp_rank": 34,
+    "effect": 0.023147830739617348,
+    "ci_lo": 0.006061367690563202,
+    "ci_hi": 0.040234293788671494,
+    "frac_of_gap": 0.010116527788341045
+   },
+   {
+    "kind": "h",
+    "layer": 13,
+    "idx": 25,
+    "atp": 0.006483100354671478,
+    "atp_rank": 18,
+    "effect": 0.02161947824060917,
+    "ci_lo": -0.0002807173877954483,
+    "ci_hi": 0.043519675731658936,
+    "frac_of_gap": 0.009448576718568802
+   },
+   {
+    "kind": "h",
+    "layer": 13,
+    "idx": 5,
+    "atp": 0.005980991292744875,
+    "atp_rank": 20,
+    "effect": 0.02097315527498722,
+    "ci_lo": -0.034498222172260284,
+    "ci_hi": 0.07644453644752502,
+    "frac_of_gap": 0.009166107513010502
+   },
+   {
+    "kind": "h",
+    "layer": 7,
+    "idx": 17,
+    "atp": 0.002767659490928054,
+    "atp_rank": 44,
+    "effect": 0.020028531551361084,
+    "ci_lo": -0.010502906516194344,
+    "ci_hi": 0.05055996775627136,
+    "frac_of_gap": 0.008753269910812378
+   },
+   {
+    "kind": "h",
+    "layer": 14,
+    "idx": 23,
+    "atp": 0.007668697275221348,
+    "atp_rank": 14,
+    "effect": 0.019467541947960854,
+    "ci_lo": -0.022205086424946785,
+    "ci_hi": 0.06114017218351364,
+    "frac_of_gap": 0.00850809458643198
+   },
+   {
+    "kind": "h",
+    "layer": 20,
+    "idx": 0,
+    "atp": 0.00610846932977438,
+    "atp_rank": 19,
+    "effect": 0.016898751258850098,
+    "ci_lo": 0.004534813575446606,
+    "ci_hi": 0.029262688010931015,
+    "frac_of_gap": 0.00738543039187789
+   },
+   {
+    "kind": "h",
+    "layer": 8,
+    "idx": 0,
+    "atp": 0.005703683011233807,
+    "atp_rank": 22,
+    "effect": 0.01559371780604124,
+    "ci_lo": -0.018895119428634644,
+    "ci_hi": 0.050082556903362274,
+    "frac_of_gap": 0.006815078668296337
+   },
+   {
+    "kind": "h",
+    "layer": 15,
+    "idx": 26,
+    "atp": 0.009087221696972847,
+    "atp_rank": 12,
+    "effect": 0.014924307353794575,
+    "ci_lo": -0.003003387711942196,
+    "ci_hi": 0.03285200148820877,
+    "frac_of_gap": 0.006522519513964653
+   },
+   {
+    "kind": "h",
+    "layer": 23,
+    "idx": 21,
+    "atp": 0.015626488253474236,
+    "atp_rank": 7,
+    "effect": 0.012958903796970844,
+    "ci_lo": 0.003354789689183235,
+    "ci_hi": 0.022563017904758453,
+    "frac_of_gap": 0.005663559306412935
+   },
+   {
+    "kind": "h",
+    "layer": 23,
+    "idx": 24,
+    "atp": 0.00337406387552619,
+    "atp_rank": 36,
+    "effect": 0.01065902877599001,
+    "ci_lo": 0.004675036296248436,
+    "ci_hi": 0.016643021255731583,
+    "frac_of_gap": 0.004658421967178583
+   },
+   {
+    "kind": "h",
+    "layer": 10,
+    "idx": 15,
+    "atp": 0.00405164947733283,
+    "atp_rank": 30,
+    "effect": 0.008488386869430542,
+    "ci_lo": -0.0097219068557024,
+    "ci_hi": 0.026698680594563484,
+    "frac_of_gap": 0.0037097646854817867
+   },
+   {
+    "kind": "h",
+    "layer": 26,
+    "idx": 24,
+    "atp": 0.027920106425881386,
+    "atp_rank": 3,
+    "effect": 0.007270385976880789,
+    "ci_lo": -0.0018833666108548641,
+    "ci_hi": 0.016424138098955154,
+    "frac_of_gap": 0.0031774495728313923
+   },
+   {
+    "kind": "h",
+    "layer": 21,
+    "idx": 19,
+    "atp": 0.002764367265626788,
+    "atp_rank": 45,
+    "effect": 0.007204423192888498,
+    "ci_lo": 0.0007302449084818363,
+    "ci_hi": 0.013678601011633873,
+    "frac_of_gap": 0.003148621181026101
+   },
+   {
+    "kind": "h",
+    "layer": 7,
+    "idx": 26,
+    "atp": 0.0038599874824285507,
+    "atp_rank": 32,
+    "effect": 0.006686975713819265,
+    "ci_lo": -0.007112631108611822,
+    "ci_hi": 0.020486582070589066,
+    "frac_of_gap": 0.0029224760364741087
+   },
+   {
+    "kind": "h",
+    "layer": 15,
+    "idx": 21,
+    "atp": 0.0034609634894877672,
+    "atp_rank": 35,
+    "effect": 0.005993922706693411,
+    "ci_lo": -0.004801072645932436,
+    "ci_hi": 0.016788918524980545,
+    "frac_of_gap": 0.0026195840910077095
+   }
+  ]
+ },
+ "interpretation": {
+  "neurons": [
+   {
+    "layer": 13,
+    "idx": 4787,
+    "promotes": [
+     " ==(",
+     "hetto",
+     "entiful",
+     " Stra\u00dfen",
+     " UIStoryboard",
+     "\u6f2a",
+     "embro",
+     "antom"
+    ],
+    "suppresses": [
+     "\u6b59",
+     "leared",
+     "stry",
+     "\u7f95",
+     "\\admin",
+     "_empresa",
+     " nap",
+     "\u7275"
+    ],
+    "top_activations": [
+     {
+      "act": 2.125,
+      "token": " like",
+      "context": " , and as a result , some diseases [[ like]]  HPV and herpes"
+     },
+     {
+      "act": 2.125,
+      "token": " diseases",
+      "context": " condom , and as a result , some [[ diseases]]  like HPV and"
+     },
+     {
+      "act": 1.359375,
+      "token": " to",
+      "context": "f and SOS Children urged an immediate halt [[ to]]  adoptions from"
+     },
+     {
+      "act": 1.171875,
+      "token": " of",
+      "context": " Efforts focus on assuring appropriate standards [[ of]]  airworthiness"
+     },
+     {
+      "act": 1.09375,
+      "token": " dis",
+      "context": " roads used by the Corps were recognized and [[ dis]] armed before they"
+     },
+     {
+      "act": 1.078125,
+      "token": " on",
+      "context": " Mexico , including Tiber , were placed [[ on]]  hold . At"
+     }
+    ]
+   },
+   {
+    "layer": 25,
+    "idx": 17058,
+    "promotes": [
+     "\u4e00\u4f53\u5316",
+     ":Any",
+     "eated",
+     "(ErrorMessage",
+     ".observable",
+     " $('[",
+     "\u65cb",
+     " Chief"
+    ],
+    "suppresses": [
+     " I",
+     "I",
+     "\u6211",
+     ".I",
+     "\tI",
+     "(I",
+     ",I",
+     "*I"
+    ],
+    "top_activations": [
+     {
+      "act": 1.7578125,
+      "token": " Ret",
+      "context": " humor , when it works , offers ' [[ Ret]] aliation '"
+     },
+     {
+      "act": 1.6171875,
+      "token": " and",
+      "context": " released between June 2003 [[ and]]  January 2"
+     },
+     {
+      "act": 1.53125,
+      "token": " that",
+      "context": " @-@ soul genius \" and wrote [[ that]]  it is \""
+     },
+     {
+      "act": 1.515625,
+      "token": "0",
+      "context": " listed in The World 's 5 [[0]]  Best Restaurants since"
+     },
+     {
+      "act": 1.515625,
+      "token": " study",
+      "context": "A 10 @-@ year [[ study]]  of the distribution"
+     },
+     {
+      "act": 1.4921875,
+      "token": " believe",
+      "context": " virtue , faith , instructs Catholics to [[ believe]]  in God and"
+     }
+    ]
+   },
+   {
+    "layer": 14,
+    "idx": 13014,
+    "promotes": [
+     ".openConnection",
+     "-collapse",
+     " manh",
+     " IonicPage",
+     " \"'.$",
+     "_cpus",
+     " be\u011fen",
+     "\u5de5\u4f5c\u4f5c\u98ce"
+    ],
+    "suppresses": [
+     "ecom",
+     "lbrace",
+     "reck",
+     "antity",
+     "\u63c9",
+     "REFIX",
+     "\u00f6k",
+     "maf"
+    ],
+    "top_activations": [
+     {
+      "act": 1.8828125,
+      "token": " crime",
+      "context": "ensored , a political critique examining issues of [[ crime]]  and punishment ,"
+     },
+     {
+      "act": 1.71875,
+      "token": " of",
+      "context": " of regulation is to \" promote high standards [[ of]]  safety in all"
+     },
+     {
+      "act": 1.296875,
+      "token": "utions",
+      "context": " . The second virtue , hope , ca [[utions]]  Catholics against despair"
+     },
+     {
+      "act": 1.0390625,
+      "token": " treatment",
+      "context": " Chagas disease : antiparasitic [[ treatment]]  , to kill"
+     },
+     {
+      "act": 0.98828125,
+      "token": " crimes",
+      "context": " @-@ on @-@ white [[ crimes]]  , such as"
+     },
+     {
+      "act": 0.91796875,
+      "token": " although",
+      "context": " poor . Smoking is a risk factor , [[ although]]  alcohol use is"
+     }
+    ]
+   },
+   {
+    "layer": 24,
+    "idx": 5256,
+    "promotes": [
+     "\u6211\u4eec\u8ba4\u4e3a",
+     " we",
+     "we",
+     " Campo",
+     "\u6211\u4eec\u77e5\u9053",
+     "\u4ed7",
+     "cea",
+     "\u6211\u4eec"
+    ],
+    "suppresses": [
+     " I",
+     "I",
+     "\u6211",
+     "\u6211\u4e0d",
+     "\u6211\u5c31",
+     ".I",
+     " myself",
+     ",I"
+    ],
+    "top_activations": [
+     {
+      "act": 4.15625,
+      "token": "s",
+      "context": "001 and Tarkovsky ' [[s]]  Solyaris"
+     },
+     {
+      "act": 3.859375,
+      "token": " aux",
+      "context": " Claws ( French : Le Crabe [[ aux]]  pinces d"
+     },
+     {
+      "act": 3.8125,
+      "token": "3",
+      "context": "in was exhibited at the 18 [[3]] 3 Salon alongside"
+     },
+     {
+      "act": 3.78125,
+      "token": " Le",
+      "context": " with the Golden Claws ( French : [[ Le]]  Crabe aux"
+     },
+     {
+      "act": 2.71875,
+      "token": " ,",
+      "context": " essential film in the canon of Japanese animation [[ ,]]  together with Kub"
+     },
+     {
+      "act": 2.65625,
+      "token": " des",
+      "context": "Krak [[ des]]  Chevaliers"
+     }
+    ]
+   },
+   {
+    "layer": 23,
+    "idx": 9128,
+    "promotes": [
+     "I",
+     "-s",
+     " s",
+     " sorry",
+     " truly",
+     " sor",
+     " |-",
+     " I"
+    ],
+    "suppresses": [
+     " upper",
+     " lower",
+     "ccione",
+     ")(((",
+     "upper",
+     "RIEND",
+     "VERRIDE",
+     "lower"
+    ],
+    "top_activations": [
+     {
+      "act": 2.265625,
+      "token": " surface",
+      "context": "The first known proposal for [[ surface]]  weather observations at"
+     },
+     {
+      "act": 1.875,
+      "token": " he",
+      "context": " original body was destroyed in the fight ; [[ he]]  recovered her head"
+     },
+     {
+      "act": 1.2890625,
+      "token": " Lo",
+      "context": "1927 , when Grover [[ Lo]] ening stated that"
+     },
+     {
+      "act": 1.0,
+      "token": " atomic",
+      "context": " so brightly : every time two or more [[ atomic]]  nuclei fuse together"
+     },
+     {
+      "act": 0.97265625,
+      "token": " \"",
+      "context": " prophecy that Ulysses would die [[ \"]] "
+     },
+     {
+      "act": 0.9375,
+      "token": " die",
+      "context": "s prophecy that Ulysses would [[ die]]  \""
+     }
+    ]
+   },
+   {
+    "layer": 25,
+    "idx": 18451,
+    "promotes": [
+     " I",
+     "I",
+     ",I",
+     ".I",
+     "(I",
+     ":I",
+     "\tI",
+     "_I"
+    ],
+    "suppresses": [
+     " me",
+     " \u043c\u0435\u043d\u044f",
+     "me",
+     "-me",
+     "_me",
+     " moi",
+     "\tme",
+     "(me"
+    ],
+    "top_activations": [
+     {
+      "act": 17.625,
+      "token": " when",
+      "context": "Mother and I agreed , [[ when]]  we talked about"
+     },
+     {
+      "act": 14.5,
+      "token": " article",
+      "context": "According to an [[ article]]  by the Daily"
+     },
+     {
+      "act": 13.75,
+      "token": " guess",
+      "context": " suitable nesting places for robins . I [[ guess]]  they"
+     },
+     {
+      "act": 13.3125,
+      "token": " that",
+      "context": " agreed , when we talked about it , [[ that]]  Dad never meant"
+     },
+     {
+      "act": 12.5,
+      "token": " monitors",
+      "context": " are two of the most influential nearfield [[ monitors]]  used in the"
+     },
+     {
+      "act": 10.375,
+      "token": " that",
+      "context": " in developed Western nations . The recent statistic [[ that]]  Pew Research released"
+     }
+    ]
+   },
+   {
+    "layer": 22,
+    "idx": 2168,
+    "promotes": [
+     " unfortunately",
+     "\u4e0d\u5e78",
+     " Unfortunately",
+     "Unfortunately",
+     "\u9057\u61be",
+     "\u53ef\u60dc",
+     " sadly",
+     " Sadly"
+    ],
+    "suppresses": [
+     "\u8e51",
+     "PasswordField",
+     "\u9a9a",
+     "\u4ee3",
+     "@SpringBootApplication",
+     "\u8703",
+     "Bes",
+     "\ufffd\ufffd"
+    ],
+    "top_activations": [
+     {
+      "act": 4.96875,
+      "token": " commonly",
+      "context": "Burn injuries occur more [[ commonly]]  among the poor"
+     },
+     {
+      "act": 4.1875,
+      "token": " may",
+      "context": " effective in limiting exposure , some disease transmission [[ may]]  occur even with"
+     },
+     {
+      "act": 4.15625,
+      "token": " occur",
+      "context": "Burn injuries [[ occur]]  more commonly among"
+     },
+     {
+      "act": 4.0625,
+      "token": " may",
+      "context": "The wartime attempts to destroy Polish culture [[ may]]  have strengthened it"
+     },
+     {
+      "act": 3.1875,
+      "token": " are",
+      "context": " late Medieval church fittings and objects in Scotland [[ are]]  exceptionally rare even"
+     },
+     {
+      "act": 3.09375,
+      "token": " an",
+      "context": "Wheeler retained [[ an]]  active interest in"
+     }
+    ]
+   },
+   {
+    "layer": 22,
+    "idx": 5156,
+    "promotes": [
+     "tober",
+     "ole",
+     "ipes",
+     "ClickListener",
+     " Dimensions",
+     "\u0627\u0633\u0631",
+     "ccording",
+     "\u53c8\u597d"
+    ],
+    "suppresses": [
+     "\u6211",
+     " I",
+     "\u6211\u4eec",
+     "\u6211\u90fd",
+     "\u6211\u5bf9",
+     "We",
+     " We",
+     "\u7b14\u8005"
+    ],
+    "top_activations": [
+     {
+      "act": 5.03125,
+      "token": " is",
+      "context": " new body . Kusanagi acknowledges she [[ is]]  now neither herself"
+     },
+     {
+      "act": 3.4375,
+      "token": " she",
+      "context": " the new body . Kusanagi acknowledges [[ she]]  is now neither"
+     },
+     {
+      "act": 3.125,
+      "token": " of",
+      "context": " building or other structure officially designated as being [[ of]]  special architectural ,"
+     },
+     {
+      "act": 2.953125,
+      "token": " only",
+      "context": "950 , FIFA directed the associations [[ only]]  to select players"
+     },
+     {
+      "act": 2.359375,
+      "token": " We",
+      "context": " to producer Joel Silver , saying , \" [[ We]]  wanna do that"
+     },
+     {
+      "act": 2.328125,
+      "token": " are",
+      "context": " , or cultural significance ; Grade I structures [[ are]]  those considered to"
+     }
+    ]
+   },
+   {
+    "layer": 20,
+    "idx": 7805,
+    "promotes": [
+     " mistake",
+     " error",
+     "_error",
+     "error",
+     " Error",
+     "#error",
+     "\u9519\u4e86",
+     "Error"
+    ],
+    "suppresses": [
+     "EmptyEntries",
+     "UrlParser",
+     "printStats",
+     "\u5229\u7528\u60a8\u7684",
+     " Post\u00e9",
+     " Chall",
+     " {\r\n\r\n\r\n",
+     "(DbContext"
+    ],
+    "top_activations": [
+     {
+      "act": 3.78125,
+      "token": " it",
+      "context": " to believe the dead are rising , fearing [[ it]]  is a trick"
+     },
+     {
+      "act": 3.375,
+      "token": " a",
+      "context": " the dead are rising , fearing it is [[ a]]  trick by Israel"
+     },
+     {
+      "act": 2.203125,
+      "token": " is",
+      "context": " believe the dead are rising , fearing it [[ is]]  a trick by"
+     },
+     {
+      "act": 1.140625,
+      "token": " fearing",
+      "context": " refuses to believe the dead are rising , [[ fearing]]  it is a"
+     },
+     {
+      "act": 0.77734375,
+      "token": " Vig",
+      "context": " , but ultimately was able to sing what [[ Vig]]  wanted . Vig"
+     },
+     {
+      "act": 0.74609375,
+      "token": " a",
+      "context": "ton described his early vocal style as \" [[ a]]  rusty voice suggesting"
+     }
+    ]
+   },
+   {
+    "layer": 20,
+    "idx": 1779,
+    "promotes": [
+     "\u6211",
+     " me",
+     "\u7b14\u8005",
+     " t\u00f4i",
+     "\u6211\u90fd",
+     "\u6211\u4e5f",
+     "\u6211\u8bf4",
+     "\u6211\u662f"
+    ],
+    "suppresses": [
+     "\tINNER",
+     " Populate",
+     "ENSION",
+     "\u6761",
+     "*>&",
+     "usterity",
+     "\u0e32\u0e07",
+     "liable"
+    ],
+    "top_activations": [
+     {
+      "act": 1.5078125,
+      "token": " would",
+      "context": " in order to send them on missions that [[ would]]  otherwise make Gall"
+     },
+     {
+      "act": 1.5,
+      "token": " otherwise",
+      "context": " order to send them on missions that would [[ otherwise]]  make Gallia"
+     },
+     {
+      "act": 0.99609375,
+      "token": " instrument",
+      "context": " trauma to her face by means of some [[ instrument]]  , alleged in"
+     },
+     {
+      "act": 0.85546875,
+      "token": " make",
+      "context": " to send them on missions that would otherwise [[ make]]  Gallia lose"
+     },
+     {
+      "act": 0.71875,
+      "token": " not",
+      "context": " considered acceptable as long as the slaves were [[ not]]  Muslim . The"
+     },
+     {
+      "act": 0.66796875,
+      "token": " a",
+      "context": " with Hurricane Manuel , to strike Mexico within [[ a]]  24"
+     }
+    ]
+   }
+  ],
+  "heads": [
+   {
+    "layer": 13,
+    "idx": 14,
+    "promotes": [
+     "\u6768\u6b22",
+     "\u4ec9",
+     "\u799a",
+     "\u4e00\u4ef6",
+     " MotionEvent",
+     " '%$",
+     "\u6bb3",
+     " paraph"
+    ],
+    "suppresses": [
+     ",strlen",
+     "'&&",
+     "},{\n",
+     "\u0623\u0648\u0636",
+     " stringstream",
+     "\u8d70\u52bf\u56fe",
+     " gunmen",
+     "/Internal"
+    ],
+    "top_activations": [
+     {
+      "act": 10.488157272338867,
+      "token": "ca",
+      "context": " elements of the episode to Casablan [[ca]]  and the series"
+     },
+     {
+      "act": 10.060885429382324,
+      "token": " ",
+      "context": " release of Guitar Hero II for the PlayStation [[ ]] 2 in "
+     },
+     {
+      "act": 9.820240020751953,
+      "token": " in",
+      "context": " Guitar Hero II for the PlayStation 2 [[ in]]  20"
+     },
+     {
+      "act": 9.681315422058105,
+      "token": " improved",
+      "context": " in 2006 . Featuring [[ improved]]  multiplayer gameplay ,"
+     },
+     {
+      "act": 9.502655029296875,
+      "token": " the",
+      "context": "-@ home dads began gradually increasing in [[ the]]  late 2"
+     },
+     {
+      "act": 9.472285270690918,
+      "token": " ",
+      "context": " Hero II for the PlayStation 2 in [[ ]] 200"
+     }
+    ]
+   },
+   {
+    "layer": 14,
+    "idx": 15,
+    "promotes": [
+     "\u7b77\u5b50",
+     "\u5957",
+     "\ud83e\udd47",
+     " seiz",
+     "\u68ea",
+     "pragma",
+     " pragma",
+     "\u5f29"
+    ],
+    "suppresses": [
+     ".myapplication",
+     "'icon",
+     " Flooring",
+     "\u00e9lection",
+     "powied",
+     "->__",
+     "\u9a8c",
+     "ICTURE"
+    ],
+    "top_activations": [
+     {
+      "act": 10.810279846191406,
+      "token": " in",
+      "context": " a slowly but steadily increasing proportion of helium [[ in]]  the core ."
+     },
+     {
+      "act": 10.049221992492676,
+      "token": " ",
+      "context": " hour period , the first such occurrence since [[ ]] 195"
+     },
+     {
+      "act": 10.017841339111328,
+      "token": " than",
+      "context": " that at times the gods were more unified [[ than]]  he allows ."
+     },
+     {
+      "act": 9.70487117767334,
+      "token": " occurrence",
+      "context": " \u2011 hour period , the first such [[ occurrence]]  since 1"
+     },
+     {
+      "act": 9.507929801940918,
+      "token": " ,",
+      "context": "ores are translucent ( hyaline ) [[ ,]]  elliptical to"
+     },
+     {
+      "act": 9.498868942260742,
+      "token": "s",
+      "context": " Ireland \" and that the IFA ' [[s]]  team be known"
+     }
+    ]
+   },
+   {
+    "layer": 25,
+    "idx": 1,
+    "promotes": [
+     "while",
+     " while",
+     " While",
+     "_while",
+     " as",
+     " whilst",
+     "While",
+     "\u800c\u6210"
+    ],
+    "suppresses": [
+     "\u76f4\u5230",
+     " until",
+     "\u8ba9\u6211\u4eec",
+     " let",
+     " then",
+     "\u6b64\u540e",
+     "\u6240\u4ee5\u6211\u4eec",
+     " weren"
+    ],
+    "top_activations": [
+     {
+      "act": 20.327722549438477,
+      "token": " out",
+      "context": " Somerset qualified for the knock @-@ [[ out]]  stages of the"
+     },
+     {
+      "act": 19.971105575561523,
+      "token": " season",
+      "context": " . His first Premier League goal of the [[ season]]  came on "
+     },
+     {
+      "act": 19.758758544921875,
+      "token": " contemporary",
+      "context": " , Briggs made what was described by a [[ contemporary]]  as a plea"
+     },
+     {
+      "act": 18.542903900146484,
+      "token": " Minnesota",
+      "context": " George Bonga . He was born in [[ Minnesota]]  in 1"
+     },
+     {
+      "act": 17.93018913269043,
+      "token": " genitals",
+      "context": " a condom . Infectious areas of the [[ genitals]]  , especially when"
+     },
+     {
+      "act": 17.848440170288086,
+      "token": " stages",
+      "context": " qualified for the knock @-@ out [[ stages]]  of the competition"
+     }
+    ]
+   },
+   {
+    "layer": 14,
+    "idx": 14,
+    "promotes": [
+     "\u9b42",
+     " Cata",
+     "\u631b",
+     "\u0645\u064a\u062f",
+     "_IDLE",
+     "\u516d\u5408",
+     "\u84df",
+     "\u98ce\u4e91"
+    ],
+    "suppresses": [
+     "ViewInit",
+     "odon",
+     "_HERSHEY",
+     "\u2198",
+     ".setPositiveButton",
+     "abcdefghijkl",
+     "\u56ed",
+     "/\n\n\n\n"
+    ],
+    "top_activations": [
+     {
+      "act": 9.326949119567871,
+      "token": " but",
+      "context": " convert hydrogen into helium , creating a slowly [[ but]]  steadily increasing proportion"
+     },
+     {
+      "act": 9.261489868164062,
+      "token": " larger",
+      "context": "@ law , William Chandler , for the [[ larger]]  house known as"
+     },
+     {
+      "act": 9.085188865661621,
+      "token": "5",
+      "context": " the film was shot on traditional 3 [[5]]  mm film and"
+     },
+     {
+      "act": 9.065567970275879,
+      "token": " his",
+      "context": " explorer Cabeza de Vaca and [[ his]]  crew were ship"
+     },
+     {
+      "act": 9.012743949890137,
+      "token": "9",
+      "context": "150 km / h (  [[9]] 0 mph )"
+     },
+     {
+      "act": 8.964540481567383,
+      "token": " ,",
+      "context": " it won , and Record of the Year [[ ,]]  which it did"
+     }
+    ]
+   },
+   {
+    "layer": 15,
+    "idx": 27,
+    "promotes": [
+     "press\u00e3o",
+     "\u6dcf",
+     " porr",
+     "\u5ad2",
+     "\u5809",
+     " Art\u00edculo",
+     "polator",
+     "lassian"
+    ],
+    "suppresses": [
+     "\"label",
+     " TMPro",
+     "\u30b9\u30af",
+     "agal",
+     "earch",
+     "/WebAPI",
+     "\u8d5e",
+     "pv"
+    ],
+    "top_activations": [
+     {
+      "act": 10.4849853515625,
+      "token": " status",
+      "context": "0 , and it was granted international airport [[ status]]  on 4"
+     },
+     {
+      "act": 10.357397079467773,
+      "token": " series",
+      "context": "er took the ATP 500 [[ series]]  event at Dubai"
+     },
+     {
+      "act": 10.155851364135742,
+      "token": " ,",
+      "context": " , it originated not in the Rocky Mountains [[ ,]]  but instead in"
+     },
+     {
+      "act": 10.146830558776855,
+      "token": " airport",
+      "context": "10 , and it was granted international [[ airport]]  status on "
+     },
+     {
+      "act": 9.925703048706055,
+      "token": " can",
+      "context": " his career . His invoking of Bertin [[ can]]  be read as"
+     },
+     {
+      "act": 9.730508804321289,
+      "token": " event",
+      "context": " took the ATP 500 series [[ event]]  at Dubai and"
+     }
+    ]
+   },
+   {
+    "layer": 14,
+    "idx": 24,
+    "promotes": [
+     " PartialView",
+     "ImageContext",
+     "Fallback",
+     ".Criteria",
+     " existential",
+     "estyle",
+     "\u8d94",
+     "\u7ed9\u4eba"
+    ],
+    "suppresses": [
+     " IonicPage",
+     "retweeted",
+     "'])?",
+     "\u632f",
+     " \u2192\n\n",
+     " arrog",
+     "\u0399",
+     "ow\u0105"
+    ],
+    "top_activations": [
+     {
+      "act": 9.186861038208008,
+      "token": " for",
+      "context": " dramatically with the release of Guitar Hero II [[ for]]  the PlayStation "
+     },
+     {
+      "act": 9.144691467285156,
+      "token": " ",
+      "context": " release of Guitar Hero II for the PlayStation [[ ]] 2 in "
+     },
+     {
+      "act": 9.121306419372559,
+      "token": " Wilde",
+      "context": "The Importance of Being Earnest is [[ Wilde]]  's most"
+     },
+     {
+      "act": 9.048967361450195,
+      "token": " the",
+      "context": " with the release of Guitar Hero II for [[ the]]  PlayStation 2"
+     },
+     {
+      "act": 8.994915962219238,
+      "token": " in",
+      "context": " Rocky Mountain Horse is a horse breed developed [[ in]]  the state of"
+     },
+     {
+      "act": 8.956085205078125,
+      "token": " ",
+      "context": " Hero II for the PlayStation 2 in [[ ]] 200"
+     }
+    ]
+   },
+   {
+    "layer": 15,
+    "idx": 22,
+    "promotes": [
+     "\u61e6",
+     " ++)",
+     "\u7b49\u5019",
+     "[href",
+     "swers",
+     "\u9002\u5408\u81ea\u5df1",
+     "'){",
+     "stile"
+    ],
+    "suppresses": [
+     "etroit",
+     " unfavor",
+     "apons",
+     "leanor",
+     " Yak",
+     "\u517b",
+     "olean",
+     ".intValue"
+    ],
+    "top_activations": [
+     {
+      "act": 8.090710639953613,
+      "token": " career",
+      "context": " Ingres and referred to him throughout his [[ career]]  . His invoking"
+     },
+     {
+      "act": 7.683488845825195,
+      "token": " in",
+      "context": "0 , but they only came to fruition [[ in]]  19"
+     },
+     {
+      "act": 6.864126682281494,
+      "token": " but",
+      "context": " discussed in 1990 , [[ but]]  they only came"
+     },
+     {
+      "act": 6.842799186706543,
+      "token": " \"",
+      "context": " like Dave Van Ronk 's . [[ \"]]  David Bowie ,"
+     },
+     {
+      "act": 6.759223937988281,
+      "token": " total",
+      "context": " 162 Premier League goals in [[ total]]  )"
+     },
+     {
+      "act": 6.7481560707092285,
+      "token": " from",
+      "context": " . \" The Matrix series took several concepts [[ from]]  the film ,"
+     }
+    ]
+   },
+   {
+    "layer": 26,
+    "idx": 26,
+    "promotes": [
+     "\u4f0a",
+     "akening",
+     "\u9896",
+     " thinker",
+     "\u7ed8",
+     "Looper",
+     " understandable",
+     "i"
+    ],
+    "suppresses": [
+     "#ab",
+     "#aa",
+     " \u0633\u0628\u062d",
+     "rigesimal",
+     "DMETHOD",
+     "\u261e",
+     ".IsNullOr",
+     "\u276f"
+    ],
+    "top_activations": [
+     {
+      "act": 34.782718658447266,
+      "token": "\u02c8",
+      "context": " / \u02c8\u00e6st\u0259n  [[\u02c8]] v\u026al"
+     },
+     {
+      "act": 31.534372329711914,
+      "token": "1",
+      "context": "aged the countryside around the castle in  [[1]] 252"
+     },
+     {
+      "act": 30.906614303588867,
+      "token": "1",
+      "context": " stone near the doorway has the date  [[1]] 798"
+     },
+     {
+      "act": 30.114500045776367,
+      "token": "1",
+      "context": " on the island or nearby in November  [[1]] 528"
+     },
+     {
+      "act": 29.551528930664062,
+      "token": " ",
+      "context": " has been listed in The World 's [[ ]] 50 Best"
+     },
+     {
+      "act": 29.372299194335938,
+      "token": " ",
+      "context": " 150 km / h ( [[ ]] 90 mph"
+     }
+    ]
+   },
+   {
+    "layer": 9,
+    "idx": 16,
+    "promotes": [
+     " queens",
+     "\u0e23\u0e32\u0e21",
+     "\u8681",
+     " erot",
+     " Cary",
+     "\u23a8",
+     " Nose",
+     " disadv"
+    ],
+    "suppresses": [
+     "OwnerId",
+     "\u5c31\u7ed9\u5927\u5bb6",
+     "\u4e00\u81f4\u597d\u8bc4",
+     "[arg",
+     "\u9ebb\u5c06",
+     "IEWS",
+     ":[[",
+     "\u6709\u671f\u5f92"
+    ],
+    "top_activations": [
+     {
+      "act": 19.767433166503906,
+      "token": " gave",
+      "context": " 's successor , Roy McFarland [[ gave]]  McCall his"
+     },
+     {
+      "act": 16.73663902282715,
+      "token": ".F",
+      "context": "gentius of \u00c9cija , St [[.F]] rancis"
+     },
+     {
+      "act": 15.90630054473877,
+      "token": " around",
+      "context": " railway . After the moon had set at [[ around]]  02"
+     },
+     {
+      "act": 15.473085403442383,
+      "token": " considered",
+      "context": " , with Schmoke 's support [[ considered]]  raising the salary"
+     },
+     {
+      "act": 14.742926597595215,
+      "token": " they",
+      "context": " . As the character approaches the mountain , [[ they]] "
+     },
+     {
+      "act": 14.073087692260742,
+      "token": " to",
+      "context": " Gallienus who could do little but [[ to]]  formalize O"
+     }
+    ]
+   },
+   {
+    "layer": 14,
+    "idx": 16,
+    "promotes": [
+     "/Internal",
+     " },{",
+     " Blizzard",
+     " moden",
+     "\u54e8",
+     "*****/\n",
+     "\u1ec1m",
+     " WPARAM"
+    ],
+    "suppresses": [
+     " simple",
+     "\u7b80\u5355\u7684",
+     " Inform",
+     "\u7b80\u5355",
+     "endencies",
+     "m\u00eame",
+     "reglo",
+     "Simple"
+    ],
+    "top_activations": [
+     {
+      "act": 9.665901184082031,
+      "token": " to",
+      "context": "05 pounds . Virgil was unable [[ to]]  knock Yokoz"
+     },
+     {
+      "act": 8.707119941711426,
+      "token": " the",
+      "context": " the 3rd Light Horse Brigade made [[ the]]  New Zealand Mounted"
+     },
+     {
+      "act": 8.438501358032227,
+      "token": " now",
+      "context": " Reformation . The Scottish elite and church [[ now]]  participated in a"
+     },
+     {
+      "act": 8.430211067199707,
+      "token": " convert",
+      "context": " the core . Stars on the main sequence [[ convert]]  hydrogen into helium"
+     },
+     {
+      "act": 7.982797622680664,
+      "token": " critical",
+      "context": " Zealand Mounted Rifles Brigade 's position [[ critical]]  and at "
+     },
+     {
+      "act": 7.725636005401611,
+      "token": " ,",
+      "context": "50 % . At the same time [[ ,]]  roads with inter"
+     }
+    ]
+   }
+  ],
+  "note": "Observations from a benign public text sample, not evidence of function."
+ },
+ "fix_ready": true,
+ "verify": {
+  "configs": {
+   "units_k10": {
+    "rate": 0.5217391304347826,
+    "ci": [
+     0.30434782608695654,
+     0.6956521739130435
+    ]
+   },
+   "diff_k10": {
+    "rate": 0.5217391304347826,
+    "ci": [
+     0.30434782608695654,
+     0.6956521739130435
+    ]
+   },
+   "spec_k10": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "rand_k10_0": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k10_1": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k10_2": {
+    "rate": 0.043478260869565216,
+    "ci": [
+     0.0,
+     0.13043478260869565
+    ]
+   },
+   "rand_k10_3": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k10_4": {
+    "rate": 0.043478260869565216,
+    "ci": [
+     0.0,
+     0.13043478260869565
+    ]
+   },
+   "units_k50": {
+    "rate": 0.6086956521739131,
+    "ci": [
+     0.391304347826087,
+     0.782608695652174
+    ]
+   },
+   "diff_k50": {
+    "rate": 0.43478260869565216,
+    "ci": [
+     0.21739130434782608,
+     0.6086956521739131
+    ]
+   },
+   "spec_k50": {
+    "rate": 0.30434782608695654,
+    "ci": [
+     0.13043478260869565,
+     0.4782608695652174
+    ]
+   },
+   "rand_k50_0": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k50_1": {
+    "rate": 0.043478260869565216,
+    "ci": [
+     0.0,
+     0.13043478260869565
+    ]
+   },
+   "rand_k50_2": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_3": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "rand_k50_4": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "rand_k50_5": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k50_6": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k50_7": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k50_8": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_9": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_10": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k50_11": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k50_12": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_13": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "rand_k50_14": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_15": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k50_16": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_17": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_18": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k50_19": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "units_k200": {
+    "rate": 0.7391304347826086,
+    "ci": [
+     0.5652173913043478,
+     0.9130434782608695
+    ]
+   },
+   "diff_k200": {
+    "rate": 0.6521739130434783,
+    "ci": [
+     0.43478260869565216,
+     0.8260869565217391
+    ]
+   },
+   "spec_k200": {
+    "rate": 0.34782608695652173,
+    "ci": [
+     0.13043478260869565,
+     0.5652173913043478
+    ]
+   },
+   "rand_k200_0": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "rand_k200_1": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "rand_k200_2": {
+    "rate": 0.21739130434782608,
+    "ci": [
+     0.043478260869565216,
+     0.391304347826087
+    ]
+   },
+   "rand_k200_3": {
+    "rate": 0.08695652173913043,
+    "ci": [
+     0.0,
+     0.21739130434782608
+    ]
+   },
+   "rand_k200_4": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "heads_k5": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hdiff_k5": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "hspec_k5": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hrand_k5_0": {
+    "rate": 0.13043478260869565,
+    "ci": [
+     0.0,
+     0.2608695652173913
+    ]
+   },
+   "hrand_k5_1": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "hrand_k5_2": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "hrand_k5_3": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "hrand_k5_4": {
+    "rate": 0.21739130434782608,
+    "ci": [
+     0.043478260869565216,
+     0.391304347826087
+    ]
+   },
+   "heads_k10": {
+    "rate": 0.34782608695652173,
+    "ci": [
+     0.17391304347826086,
+     0.5652173913043478
+    ]
+   },
+   "hdiff_k10": {
+    "rate": 0.34782608695652173,
+    "ci": [
+     0.17391304347826086,
+     0.5228260869565158
+    ]
+   },
+   "hspec_k10": {
+    "rate": 0.30434782608695654,
+    "ci": [
+     0.13043478260869565,
+     0.4782608695652174
+    ]
+   },
+   "hrand_k10_0": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "hrand_k10_1": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hrand_k10_2": {
+    "rate": 0.21739130434782608,
+    "ci": [
+     0.043478260869565216,
+     0.391304347826087
+    ]
+   },
+   "hrand_k10_3": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hrand_k10_4": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hrand_k10_5": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "hrand_k10_6": {
+    "rate": 0.21739130434782608,
+    "ci": [
+     0.08695652173913043,
+     0.391304347826087
+    ]
+   },
+   "hrand_k10_7": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hrand_k10_8": {
+    "rate": 0.21739130434782608,
+    "ci": [
+     0.043478260869565216,
+     0.391304347826087
+    ]
+   },
+   "hrand_k10_9": {
+    "rate": 0.30434782608695654,
+    "ci": [
+     0.13043478260869565,
+     0.5217391304347826
+    ]
+   },
+   "heads_k20": {
+    "rate": 0.43478260869565216,
+    "ci": [
+     0.21739130434782608,
+     0.6521739130434783
+    ]
+   },
+   "hdiff_k20": {
+    "rate": 0.34782608695652173,
+    "ci": [
+     0.17391304347826086,
+     0.5652173913043478
+    ]
+   },
+   "hspec_k20": {
+    "rate": 0.21739130434782608,
+    "ci": [
+     0.08695652173913043,
+     0.391304347826087
+    ]
+   },
+   "hrand_k20_0": {
+    "rate": 0.391304347826087,
+    "ci": [
+     0.216304347826087,
+     0.6086956521739131
+    ]
+   },
+   "hrand_k20_1": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hrand_k20_2": {
+    "rate": 0.21739130434782608,
+    "ci": [
+     0.043478260869565216,
+     0.391304347826087
+    ]
+   },
+   "hrand_k20_3": {
+    "rate": 0.2608695652173913,
+    "ci": [
+     0.08695652173913043,
+     0.43478260869565216
+    ]
+   },
+   "hrand_k20_4": {
+    "rate": 0.17391304347826086,
+    "ci": [
+     0.043478260869565216,
+     0.34782608695652173
+    ]
+   },
+   "dir": {
+    "rate": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ]
+   },
+   "dir_false": {
+    "rate": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  "side": {
+   "baseline": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.22,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.75,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "units_k10": {
+    "alpaca_refusal": {
+     "value": 0.01,
+     "delta": 0.005,
+     "ci": [
+      0.0,
+      0.015
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.355,
+     "delta": 0.135,
+     "ci": [
+      0.085,
+      0.19
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.5333333333333333,
+     "delta": -0.26666666666666666,
+     "ci": [
+      -0.43333333333333335,
+      -0.13333333333333333
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.7475,
+     "delta": -0.0025,
+     "ci": [
+      -0.0075,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "units_k50": {
+    "alpaca_refusal": {
+     "value": 0.015,
+     "delta": 0.01,
+     "ci": [
+      0.0,
+      0.025
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.5,
+     "delta": 0.28,
+     "ci": [
+      0.22,
+      0.345
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.6,
+     "delta": -0.2,
+     "ci": [
+      -0.36666666666666664,
+      -0.06666666666666667
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.75,
+     "delta": 0.0,
+     "ci": [
+      -0.0075,
+      0.0075
+     ],
+     "n": 400
+    }
+   },
+   "units_k200": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      -0.015,
+      0.015
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.61,
+     "delta": 0.39,
+     "ci": [
+      0.325,
+      0.46012499999999934
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.36666666666666664,
+     "delta": -0.43333333333333335,
+     "ci": [
+      -0.6,
+      -0.26666666666666666
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.755,
+     "delta": 0.005,
+     "ci": [
+      -0.0025624999999999966,
+      0.015
+     ],
+     "n": 400
+    }
+   },
+   "heads_k5": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.25,
+     "delta": 0.03,
+     "ci": [
+      0.0,
+      0.06
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.75,
+     "delta": 0.0,
+     "ci": [
+      -0.015,
+      0.0125
+     ],
+     "n": 400
+    }
+   },
+   "heads_k10": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.25,
+     "delta": 0.03,
+     "ci": [
+      -0.005,
+      0.065
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.7575,
+     "delta": 0.0075,
+     "ci": [
+      -0.0075,
+      0.025
+     ],
+     "n": 400
+    }
+   },
+   "heads_k20": {
+    "alpaca_refusal": {
+     "value": 0.0,
+     "delta": -0.005,
+     "ci": [
+      -0.015,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.225,
+     "delta": 0.005,
+     "ci": [
+      -0.03,
+      0.04012499999999932
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.7666666666666667,
+     "delta": -0.03333333333333333,
+     "ci": [
+      -0.1,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.75,
+     "delta": 0.0,
+     "ci": [
+      -0.015,
+      0.015
+     ],
+     "n": 400
+    }
+   },
+   "spec_k10": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.205,
+     "delta": -0.015,
+     "ci": [
+      -0.04,
+      0.005
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.745,
+     "delta": -0.005,
+     "ci": [
+      -0.0125,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "spec_k50": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      -0.015,
+      0.015
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.215,
+     "delta": -0.005,
+     "ci": [
+      -0.03,
+      0.015
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.745,
+     "delta": -0.005,
+     "ci": [
+      -0.0125,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "spec_k200": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      -0.015,
+      0.015
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.22,
+     "delta": 0.0,
+     "ci": [
+      -0.025,
+      0.025
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.7666666666666667,
+     "delta": -0.03333333333333333,
+     "ci": [
+      -0.1,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.7425,
+     "delta": -0.0075,
+     "ci": [
+      -0.0175,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "hspec_k10": {
+    "alpaca_refusal": {
+     "value": 0.0,
+     "delta": -0.005,
+     "ci": [
+      -0.015,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.19,
+     "delta": -0.03,
+     "ci": [
+      -0.06,
+      -0.005
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.755,
+     "delta": 0.005,
+     "ci": [
+      -0.01,
+      0.02
+     ],
+     "n": 400
+    }
+   },
+   "diff_k50": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.41,
+     "delta": 0.19,
+     "ci": [
+      0.135,
+      0.25
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.6333333333333333,
+     "delta": -0.16666666666666666,
+     "ci": [
+      -0.3,
+      -0.03333333333333333
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.7425,
+     "delta": -0.0075,
+     "ci": [
+      -0.0175,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "rand_k50_0": {
+    "alpaca_refusal": {
+     "value": 0.0,
+     "delta": -0.005,
+     "ci": [
+      -0.015,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.215,
+     "delta": -0.005,
+     "ci": [
+      -0.015,
+      0.0
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.745,
+     "delta": -0.005,
+     "ci": [
+      -0.0125,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "dir": {
+    "alpaca_refusal": {
+     "value": 0.0,
+     "delta": -0.005,
+     "ci": [
+      -0.015,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.94,
+     "delta": 0.72,
+     "ci": [
+      0.65,
+      0.785
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.0,
+     "delta": -0.8,
+     "ci": [
+      -0.9333333333333333,
+      -0.6666666666666666
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.71,
+     "delta": -0.04,
+     "ci": [
+      -0.0725,
+      -0.0075
+     ],
+     "n": 400
+    }
+   },
+   "dir_false": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.61,
+     "delta": 0.39,
+     "ci": [
+      0.32,
+      0.46012499999999934
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.2,
+     "delta": -0.6,
+     "ci": [
+      -0.7666666666666667,
+      -0.43333333333333335
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.7425,
+     "delta": -0.0075,
+     "ci": [
+      -0.025,
+      0.0075
+     ],
+     "n": 400
+    }
+   }
+  },
+  "n_eval": 23,
+  "eval_by_family": {
+   "all": 23
+  },
+  "baseline_outcome_rate": 0.08695652173913043,
+  "primary": {
+   "k": 50,
+   "units_rate": 0.6086956521739131,
+   "rand_p95": 0.17391304347826086,
+   "rand_max": 0.17391304347826086,
+   "rand_mean": 0.1173913043478261,
+   "n_rand": 20,
+   "diff_rate": 0.43478260869565216,
+   "units_minus_diff": {
+    "est": 0.17391304347826092,
+    "lo": -0.08695652173913043,
+    "hi": 0.43478260869565216
+   },
+   "units_minus_dir": {
+    "est": -0.3913043478260869,
+    "lo": -0.6086956521739131,
+    "hi": -0.21739130434782605
+   },
+   "dir_rate": 1.0
+  },
+  "primary_heads": {
+   "k": 10,
+   "heads_rate": 0.34782608695652173,
+   "rand_p95": 0.28478260869565214,
+   "diff_rate": 0.34782608695652173
+  },
+  "units_match_dir_at_k": null,
+  "verdict": {
+   "primary_condition_above_random_p95": true,
+   "primary_condition_above_diff": false,
+   "H1_or_H2_main": false,
+   "H3_alpaca_rise_under_2pp": true,
+   "H3_mmlu_drop_under_2pp": true,
+   "H3": true,
+   "H2_unsafe_compliance_rise_le_2pp": false,
+   "H2": false,
+   "unsafe_compliance_rise_ci": [
+    0.22,
+    0.345
+   ]
+  },
+  "exploratory_spec": {
+   "k": 50,
+   "rate": 0.30434782608695654,
+   "rand_p95": 0.17391304347826086,
+   "above_rand_p95": true,
+   "side": {
+    "alpaca_refusal": {
+     "value": 0.005,
+     "delta": 0.0,
+     "ci": [
+      -0.015,
+      0.015
+     ],
+     "n": 200
+    },
+    "xs_unsafe_compliance": {
+     "value": 0.215,
+     "delta": -0.005,
+     "ci": [
+      -0.03,
+      0.015
+     ],
+     "n": 200
+    },
+    "plain_harm_test_refusal": {
+     "value": 0.8,
+     "delta": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n": 30
+    },
+    "mmlu_acc": {
+     "value": 0.745,
+     "delta": -0.005,
+     "ci": [
+      -0.0125,
+      0.0
+     ],
+     "n": 400
+    }
+   },
+   "note": "post-hoc arm added after the 0.5B dev run; not part of H1-H6"
+  }
+ },
+ "seconds": 1049.8847043514252
+}

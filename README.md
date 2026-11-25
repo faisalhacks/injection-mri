@@ -93,3 +93,26 @@ uv tool run modal run modal_refusal.py --run r7b --gpu a100 --args "culprits --m
 ```
 
 Reports go to `results_refusal/<model>/report_<mode>.html`; numbers to `summary_<mode>.json`. Method and design choices are in `refusal.py`; tests on a tiny random model: `uv run python tests_refusal.py`.
+
+## Results (single run per model, greedy, bf16 on Modal; numbers from `results_refusal/<model>/summary_<mode>.json`)
+
+Held-out behaviours and held-out wrapper templates. "Restore" = fraction of held-out bypass cells (plain refused, wrapped complied) that are refused after the patch. Random = 20 same-layer random neuron sets (95th percentile shown). Diff = top-50 by plain activation difference. All patches are mean-patches at the last prompt token and generated tokens.
+
+| Bypass, k=50 neurons | 0.5B | 1.5B | 7B |
+|---|---|---|---|
+| eligible held-out cells | 259 | 181 | 221 |
+| **culprits restore** | 0.730 | 1.000 | 0.801 |
+| random p95 / diff-top-50 | 0.074 / 0.073 | 0.064 / 0.044 | 0.037 / 0.036 |
+| Arditi direction (add) | 0.757 | 0.978 | 0.869 |
+| refusal rise on harmless Alpaca (n=200): culprits / direction | +25.0 / +45.5 pp | +92.0 / +78.5 pp | +4.5 / +22.5 pp |
+| MMLU change (n=400): culprits / direction | +0.8 / +1.5 pp | +1.0 / +0.5 pp | +0.2 / -9.8 pp |
+
+| Over-refusal, k=50 neurons | 0.5B | 1.5B | 7B |
+|---|---|---|---|
+| over-refused held-out prompts | 111 | 156 | 23 (too few) |
+| **culprits reduce over-refusal** | 0.514 | 0.301 | 0.609 |
+| random p95 / diff-top-50 | 0.055 / 0.117 | 0.020 / 0.038 | 0.174 / 0.435 |
+| rise in compliance on XSTest-unsafe | +12.0 pp | +5.0 pp | +28.0 pp |
+| direction (ablate): reduction / unsafe compliance rise | 0.991 / +87 pp | 1.000 / +98.5 pp | 1.000 / +72 pp |
+
+**Honest reading.** The units are causal and specific compared with controls: they beat random same-layer and activation-difference sets by a wide margin on every model, and on 7B they match the Arditi direction on restoring refusal (difference CI includes 0) with far smaller collateral damage (Alpaca +4.5 vs +22.5 pp, MMLU unchanged vs -9.8 pp). But at k=50 they are not jailbreak-specific: they behave as a general refusal switch (on 0.5B and 1.5B they make the model refuse harmless prompts too), so the side-effect pre-registration (H3) fails in bypass mode on all three models, and the over-refusal arm (H2) fails because unsafe compliance rises. See the verdict table in the final report and `docs/PREREGISTRATION_REFUSAL.md` (including Amendment 1) for the exact criteria. Labels are phrase matches; on 7B the refusal-classifier audit agrees on only 80 to 87% of items (kappa 0.57 to 0.75), so 7B refusal rates are undercounted.

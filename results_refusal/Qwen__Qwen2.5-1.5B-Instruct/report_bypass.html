@@ -1,0 +1,176 @@
+<!doctype html><meta charset=utf-8><title>refusal culprits: Qwen/Qwen2.5-1.5B-Instruct bypass</title>
+<style>body{font:14px system-ui;max-width:1000px;margin:24px auto;padding:0 12px;color:#222}table{border-collapse:collapse;margin:8px 0}td,th{border:1px solid #ccc;padding:3px 8px;text-align:left}th{background:#f2f2f2}.note{background:#fff7e0;padding:8px;border:1px solid #e6d28a}</style>
+<h1>Refusal culprits: Qwen/Qwen2.5-1.5B-Instruct, mode <code>bypass</code></h1>
+<p class=note><b>Safety.</b> This report contains unit indices, scores, rates and benign public text only. No model completion to a harmful request is shown, stored in a committed file or printed. Raw generations stay in <code>results_refusal/_private/</code> (gitignored). Interpretation sections are observations, not proof of function. Pre-registration: docs/PREREGISTRATION_REFUSAL.md.</p>
+<p>Goal: restore refusal under jailbreak. Counts: {&#x27;plain&#x27;: 100, &#x27;alpaca&#x27;: 200, &#x27;wrapped_train&#x27;: 1200, &#x27;wrapped_val&#x27;: 100, &#x27;wrapped_test&#x27;: 1440, &#x27;pool_test&#x27;: 255}. Pairs for attribution: 188. Baseline refusal rates: {&#x27;plain&#x27;: 0.99, &#x27;alpaca&#x27;: 0.055, &#x27;wrapped_train&#x27;: 0.676, &#x27;wrapped_val&#x27;: 0.75, &#x27;wrapped_test&#x27;: 0.651, &#x27;pool_test&#x27;: 0.612}.</p>
+<p>Label audit (phrase match vs open refusal classifier, aggregate only): {&#x27;available&#x27;: True, &#x27;n&#x27;: 300, &#x27;agreement&#x27;: 0.9433333333333334, &#x27;kappa&#x27;: 0.8803715518859073, &#x27;phrase_refusal_rate&#x27;: 0.6233333333333333, &#x27;judge_refusal_rate&#x27;: 0.6066666666666667}</p>
+<p>Attribution vs exact activation patching: {&#x27;neurons&#x27;: {&#x27;n&#x27;: 150, &#x27;pearson&#x27;: 0.4384284360744757, &#x27;spearman&#x27;: 0.5379421307613672}, &#x27;heads&#x27;: {&#x27;n&#x27;: 50, &#x27;pearson&#x27;: 0.007834257840912769, &#x27;spearman&#x27;: 0.11865546218487394}, &#x27;n_pairs&#x27;: 24}</p>
+<h2>Top neurons by exact patching effect (clean-ward, metric M units)</h2><table><tr><th>unit</th><th>atp_rank</th><th>effect</th><th>ci</th><th>pct_gap</th></tr><tr><td>L16 N1019</td><td>34</td><td>+0.197</td><td>[+0.157, +0.237]</td><td>6.1%</td></tr><tr><td>L21 N47</td><td>14</td><td>+0.196</td><td>[+0.120, +0.273]</td><td>6.1%</td></tr><tr><td>L15 N6637</td><td>18</td><td>+0.183</td><td>[+0.127, +0.238]</td><td>5.6%</td></tr><tr><td>L18 N2120</td><td>4</td><td>+0.176</td><td>[+0.123, +0.230]</td><td>5.4%</td></tr><tr><td>L22 N2869</td><td>2</td><td>+0.161</td><td>[+0.089, +0.233]</td><td>5.0%</td></tr><tr><td>L18 N7856</td><td>8</td><td>+0.159</td><td>[+0.125, +0.193]</td><td>4.9%</td></tr><tr><td>L17 N47</td><td>37</td><td>+0.100</td><td>[+0.074, +0.127]</td><td>3.1%</td></tr><tr><td>L16 N3207</td><td>17</td><td>+0.092</td><td>[+0.066, +0.117]</td><td>2.8%</td></tr><tr><td>L21 N3052</td><td>16</td><td>+0.075</td><td>[+0.018, +0.132]</td><td>2.3%</td></tr><tr><td>L22 N8806</td><td>3</td><td>+0.071</td><td>[+0.040, +0.101]</td><td>2.2%</td></tr></table>
+<h2>Top attention heads</h2><table><tr><th>unit</th><th>atp_rank</th><th>effect</th><th>ci</th><th>pct_gap</th></tr><tr><td>L16 H7</td><td>20</td><td>+0.242</td><td>[+0.167, +0.317]</td><td>7.5%</td></tr><tr><td>L16 H8</td><td>36</td><td>+0.215</td><td>[+0.176, +0.254]</td><td>6.6%</td></tr><tr><td>L19 H11</td><td>16</td><td>+0.132</td><td>[+0.073, +0.190]</td><td>4.1%</td></tr><tr><td>L11 H10</td><td>45</td><td>+0.125</td><td>[+0.093, +0.156]</td><td>3.8%</td></tr><tr><td>L24 H6</td><td>9</td><td>+0.094</td><td>[-0.002, +0.189]</td><td>2.9%</td></tr><tr><td>L26 H8</td><td>4</td><td>+0.087</td><td>[-0.010, +0.185]</td><td>2.7%</td></tr><tr><td>L15 H2</td><td>42</td><td>+0.068</td><td>[+0.040, +0.097]</td><td>2.1%</td></tr><tr><td>L16 H3</td><td>13</td><td>+0.062</td><td>[+0.025, +0.100]</td><td>1.9%</td></tr><tr><td>L27 H5</td><td>10</td><td>+0.062</td><td>[+0.005, +0.119]</td><td>1.9%</td></tr><tr><td>L19 H9</td><td>39</td><td>+0.058</td><td>[+0.024, +0.093]</td><td>1.8%</td></tr></table>
+<h2>Causal verification (restore rate on held-out bypass cells); n=181, baseline 0.033</h2><table><tr><th>config</th><th>rate</th><th>ci</th></tr><tr><td>units_k10</td><td>0.823</td><td>[0.697, 0.933]</td></tr><tr><td>diff_k10</td><td>0.044</td><td>[0.000, 0.118]</td></tr><tr><td>spec_k10</td><td>0.691</td><td>[0.539, 0.824]</td></tr><tr><td>units_k50</td><td>1.000</td><td>[1.000, 1.000]</td></tr><tr><td>diff_k50</td><td>0.044</td><td>[0.005, 0.115]</td></tr><tr><td>spec_k50</td><td>0.901</td><td>[0.803, 0.978]</td></tr><tr><td>units_k200</td><td>1.000</td><td>[1.000, 1.000]</td></tr><tr><td>diff_k200</td><td>0.149</td><td>[0.060, 0.261]</td></tr><tr><td>spec_k200</td><td>0.961</td><td>[0.903, 1.000]</td></tr><tr><td>heads_k5</td><td>0.182</td><td>[0.076, 0.322]</td></tr><tr><td>hdiff_k5</td><td>0.105</td><td>[0.038, 0.197]</td></tr><tr><td>hspec_k5</td><td>0.182</td><td>[0.076, 0.322]</td></tr><tr><td>heads_k10</td><td>0.271</td><td>[0.157, 0.414]</td></tr><tr><td>hdiff_k10</td><td>0.127</td><td>[0.050, 0.226]</td></tr><tr><td>hspec_k10</td><td>0.271</td><td>[0.157, 0.414]</td></tr><tr><td>heads_k20</td><td>0.381</td><td>[0.233, 0.558]</td></tr><tr><td>hdiff_k20</td><td>0.249</td><td>[0.109, 0.406]</td></tr><tr><td>hspec_k20</td><td>0.298</td><td>[0.163, 0.470]</td></tr><tr><td>dir</td><td>0.978</td><td>[0.920, 1.000]</td></tr></table>
+<p>Primary comparison: {&#x27;k&#x27;: 50, &#x27;units_rate&#x27;: 1.0, &#x27;rand_p95&#x27;: 0.06408839779005529, &#x27;rand_max&#x27;: 0.1270718232044199, &#x27;rand_mean&#x27;: 0.04143646408839779, &#x27;n_rand&#x27;: 20, &#x27;diff_rate&#x27;: 0.04419889502762431, &#x27;units_minus_diff&#x27;: {&#x27;est&#x27;: 0.9558011049723757, &#x27;lo&#x27;: 0.885319220935479, &#x27;hi&#x27;: 0.9949244987950572}, &#x27;units_minus_dir&#x27;: {&#x27;est&#x27;: 0.02209944751381221, &#x27;lo&#x27;: 0.0, &#x27;hi&#x27;: 0.08000803212851397}, &#x27;dir_rate&#x27;: 0.9779005524861878}</p><p>Heads: {&#x27;k&#x27;: 10, &#x27;heads_rate&#x27;: 0.27071823204419887, &#x27;rand_p95&#x27;: 0.29917127071823196, &#x27;diff_rate&#x27;: 0.1270718232044199}</p>
+<h2>Side effects</h2><table><tr><th>config</th><th>alpaca_refusal</th><th>mmlu_acc</th><th>safe_pool_refusal</th></tr><tr><td>baseline</td><td>0.055 (d +0.000)</td><td>0.613 (d +0.000)</td><td>0.616 (d +0.000)</td></tr><tr><td>units_k10</td><td>0.450 (d +0.395)</td><td>0.618 (d +0.005)</td><td>0.867 (d +0.251)</td></tr><tr><td>units_k50</td><td>0.975 (d +0.920)</td><td>0.623 (d +0.010)</td><td>1.000 (d +0.384)</td></tr><tr><td>units_k200</td><td>0.995 (d +0.940)</td><td>0.618 (d +0.005)</td><td>1.000 (d +0.384)</td></tr><tr><td>heads_k5</td><td>0.060 (d +0.005)</td><td>0.618 (d +0.005)</td><td>0.639 (d +0.024)</td></tr><tr><td>heads_k10</td><td>0.065 (d +0.010)</td><td>0.623 (d +0.010)</td><td>0.682 (d +0.067)</td></tr><tr><td>heads_k20</td><td>0.060 (d +0.005)</td><td>0.623 (d +0.010)</td><td>0.655 (d +0.039)</td></tr><tr><td>spec_k10</td><td>0.100 (d +0.045)</td><td>0.620 (d +0.007)</td><td>0.643 (d +0.027)</td></tr><tr><td>spec_k50</td><td>0.160 (d +0.105)</td><td>0.618 (d +0.005)</td><td>0.733 (d +0.118)</td></tr><tr><td>spec_k200</td><td>0.230 (d +0.175)</td><td>0.623 (d +0.010)</td><td>0.769 (d +0.153)</td></tr><tr><td>hspec_k10</td><td>0.065 (d +0.010)</td><td>0.623 (d +0.010)</td><td>0.682 (d +0.067)</td></tr><tr><td>diff_k50</td><td>0.055 (d +0.000)</td><td>0.618 (d +0.005)</td><td>0.620 (d +0.004)</td></tr><tr><td>rand_k50_0</td><td>0.060 (d +0.005)</td><td>0.618 (d +0.005)</td><td>0.635 (d +0.020)</td></tr><tr><td>dir</td><td>0.840 (d +0.785)</td><td>0.618 (d +0.005)</td><td>1.000 (d +0.384)</td></tr></table>
+<h2>Verdicts</h2><pre>{
+ &quot;primary_condition_above_random_p95&quot;: true,
+ &quot;primary_condition_above_diff&quot;: true,
+ &quot;H1_or_H2_main&quot;: true,
+ &quot;H3_alpaca_rise_under_2pp&quot;: false,
+ &quot;H3_mmlu_drop_under_2pp&quot;: true,
+ &quot;H3&quot;: false,
+ &quot;H1&quot;: true
+}</pre>
+<h2>Exploratory: side-effect-aware ranking (post-hoc, not part of H1-H6)</h2><pre>{
+ &quot;k&quot;: 50,
+ &quot;rate&quot;: 0.9005524861878453,
+ &quot;rand_p95&quot;: 0.06408839779005529,
+ &quot;above_rand_p95&quot;: true,
+ &quot;side&quot;: {
+  &quot;alpaca_refusal&quot;: {
+   &quot;value&quot;: 0.16,
+   &quot;delta&quot;: 0.105,
+   &quot;ci&quot;: [
+    0.065,
+    0.15
+   ],
+   &quot;n&quot;: 200
+  },
+  &quot;safe_pool_refusal&quot;: {
+   &quot;value&quot;: 0.7333333333333333,
+   &quot;delta&quot;: 0.11764705882352941,
+   &quot;ci&quot;: [
+    0.07450980392156863,
+    0.16470588235294117
+   ],
+   &quot;n&quot;: 255
+  },
+  &quot;mmlu_acc&quot;: {
+   &quot;value&quot;: 0.6175,
+   &quot;delta&quot;: 0.005,
+   &quot;ci&quot;: [
+    -0.01,
+    0.0225
+   ],
+   &quot;n&quot;: 400
+  }
+ },
+ &quot;note&quot;: &quot;post-hoc arm added after the 0.5B dev run; not part of H1-H6&quot;
+}</pre>
+<h2>Families, platforms, dates (H5/H6)</h2>
+<h3>Top-k neuron Jaccard between fam groups; J_between 0.4845213579878019, J_within 0.7602437041723146, null p99 0.010101010101010102: <b>shared</b></h3>
+<table><tr><th>group</th><th>fam:Anarchy</th><th>fam:Guidelines</th><th>fam:Opposite</th><th>fam:Toxic</th><th>fam:unlabelled</th></tr><tr><td>fam:Anarchy</td><td>1.00</td><td>0.59</td><td>0.49</td><td>0.39</td><td>0.59</td></tr><tr><td>fam:Guidelines</td><td>0.59</td><td>1.00</td><td>0.45</td><td>0.37</td><td>0.49</td></tr><tr><td>fam:Opposite</td><td>0.49</td><td>0.45</td><td>1.00</td><td>0.45</td><td>0.64</td></tr><tr><td>fam:Toxic</td><td>0.39</td><td>0.37</td><td>0.45</td><td>1.00</td><td>0.39</td></tr><tr><td>fam:unlabelled</td><td>0.59</td><td>0.49</td><td>0.64</td><td>0.39</td><td>1.00</td></tr></table>
+<h3>Top-k neuron Jaccard between kw groups; J_between 0.5151515151515151, J_within 0.750116468473474, null p99 0.010101010101010102: <b>shared</b></h3>
+<table><tr><th>group</th><th>kw:persona</th><th>kw:refusal_suppression</th></tr><tr><td>kw:persona</td><td>1.00</td><td>0.52</td></tr><tr><td>kw:refusal_suppression</td><td>0.52</td><td>1.00</td></tr></table>
+<h3>Transfer restore rates (row = culprits from family, column = evaluated on): rho 1.0416666666666667, q 1.0: <b>shared mechanism</b></h3>
+<table><tr><th>source</th><th>Anarchy</th><th>Guidelines</th><th>Opposite</th><th>Toxic</th><th>unlabelled</th></tr><tr><td>Anarchy</td><td>0.97</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td></tr><tr><td>Guidelines</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td></tr><tr><td>Opposite</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td></tr><tr><td>Toxic</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.82</td><td>1.00</td></tr><tr><td>unlabelled</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td></tr></table>
+<pre>{
+ &quot;platform&quot;: {
+  &quot;rates&quot;: {
+   &quot;discord&quot;: 0.4503882947827961,
+   &quot;reddit&quot;: 0.3693903781403781,
+   &quot;website&quot;: 0.19227511955380475
+  },
+  &quot;n_templates&quot;: {
+   &quot;discord&quot;: 40,
+   &quot;reddit&quot;: 20,
+   &quot;website&quot;: 36
+  },
+  &quot;max_gap&quot;: 0.25811317522899135,
+  &quot;perm_p&quot;: 0.01779644071185763
+ },
+ &quot;datebin&quot;: {
+  &quot;rates&quot;: {
+   &quot;late&quot;: 0.3264193922916497,
+   &quot;early&quot;: 0.3511439422430999
+  },
+  &quot;n_templates&quot;: {
+   &quot;late&quot;: 56,
+   &quot;early&quot;: 40
+  },
+  &quot;max_gap&quot;: 0.024724549951450236,
+  &quot;perm_p&quot;: 0.7354529094181164
+ },
+ &quot;famname&quot;: {
+  &quot;rates&quot;: {
+   &quot;Anarchy&quot;: 0.6716277023629965,
+   &quot;Basic&quot;: 0.041666666666666664,
+   &quot;Exception&quot;: 0.03130279402209227,
+   &quot;Opposite&quot;: 0.6867676767676767,
+   &quot;unlabelled&quot;: 0.28206710686973846,
+   &quot;Toxic&quot;: 0.6140238552376234,
+   &quot;Guidelines&quot;: 0.084247396041499
+  },
+  &quot;n_templates&quot;: {
+   &quot;Anarchy&quot;: 12,
+   &quot;Basic&quot;: 12,
+   &quot;Exception&quot;: 12,
+   &quot;Opposite&quot;: 12,
+   &quot;unlabelled&quot;: 24,
+   &quot;Toxic&quot;: 12,
+   &quot;Guidelines&quot;: 12
+  },
+  &quot;max_gap&quot;: 0.6554648827455845,
+  &quot;perm_p&quot;: 0.0001999600079984003
+ },
+ &quot;profile_plat&quot;: {
+  &quot;groups&quot;: [
+   &quot;plat:discord&quot;,
+   &quot;plat:reddit&quot;,
+   &quot;plat:website&quot;
+  ],
+  &quot;within_rho_mean&quot;: 0.899124447152505,
+  &quot;within_rho_p5&quot;: 0.8261379273435967,
+  &quot;cross_rho_mean&quot;: 0.6581983613945115,
+  &quot;verdict&quot;: &quot;differs&quot;
+ },
+ &quot;profile_date&quot;: {
+  &quot;groups&quot;: [
+   &quot;date:early&quot;,
+   &quot;date:late&quot;
+  ],
+  &quot;within_rho_mean&quot;: 0.919402784125279,
+  &quot;within_rho_p5&quot;: 0.8837236723826722,
+  &quot;cross_rho_mean&quot;: 0.7205134504525119,
+  &quot;verdict&quot;: &quot;differs&quot;
+ }
+}</pre>
+<h2>Interpretation (observations only)</h2><p>Observations from a benign public text sample, not evidence of function.</p>
+<h4>L16 N1019</h4><p>logit lens promotes: [&#x27;出动&#x27;, &#x27; &lt;!--[&#x27;, &#x27;utex&#x27;, &#x27;力量&#x27;, &#x27;_require&#x27;, &#x27;-status&#x27;, &#x27;igit&#x27;, &#x27;佞&#x27;]; suppresses: [&#x27;罔&#x27;, &#x27;不合理&#x27;, &#x27;根本没有&#x27;, &#x27;LICENSE&#x27;, &#x27; license&#x27;, &#x27; horribly&#x27;, &#x27;aires&#x27;, &#x27;不该&#x27;]</p>
+<ul><li>0.969: 20 m ( 4 @,@ [[ ]] 000</li><li>0.719:  leaders under Cobra &#x27;s control , and [[ gains]]  access to their</li><li>0.543:  United States , the terrorist organization is able [[ to]]  frame the J</li><li>0.527:  Cobra &#x27;s control , and gains access [[ to]]  their advanced war</li></ul>
+<h4>L21 N47</h4><p>logit lens promotes: [&#x27; unfortunately&#x27;, &#x27;遗憾&#x27;, &#x27; sadly&#x27;, &#x27; regret&#x27;, &#x27; sorry&#x27;, &#x27;不幸&#x27;, &#x27; Unfortunately&#x27;, &#x27; Sadly&#x27;]; suppresses: [&#x27;nown&#x27;, &#x27;arias&#x27;, &#x27;rench&#x27;, &#x27;ör&#x27;, &#x27;affle&#x27;, &#x27;边际&#x27;, &#x27;ランス&#x27;, &#x27;ermen&#x27;]</p>
+<ul><li>2.812:  discussed in 1990 , [[ but]]  they only came</li><li>1.734:  won , and Record of the Year , [[ which]]  it did not</li><li>1.602: 505 pounds . Virgil was [[ unable]]  to knock Yok</li><li>1.172:  , The Villans , The Lions ) [[ is]]  a professional association</li></ul>
+<h4>L15 N6637</h4><p>logit lens promotes: [&#x27; safely&#x27;, &#x27; safe&#x27;, &#x27;安全&#x27;, &#x27; safety&#x27;, &#x27;-safe&#x27;, &#x27;safe&#x27;, &#x27; responsibly&#x27;, &#x27; Safety&#x27;]; suppresses: [&#x27;Mapped&#x27;, &#x27; chồng&#x27;, &#x27; speakers&#x27;, &#x27; Duffy&#x27;, &#x27;rench&#x27;, &#x27; setter&#x27;, &#x27; togg&#x27;, &#x27;StateChanged&#x27;]</p>
+<ul><li>0.574: While [[ performing]]  shows with The</li><li>0.449:  and a Golden Globe Award for Best Performance [[ by]] </li><li>0.4: The dam wall is situated in [[ a]]  narrow gorge running</li><li>0.367:  Football Club ( / ˈæst [[ə]] n ˈ</li></ul>
+<h4>L18 N2120</h4><p>logit lens promotes: [&#x27;不存在&#x27;, &#x27; neither&#x27;, &#x27;完全没有&#x27;, &#x27;是不可能&#x27;, &#x27; none&#x27;, &#x27; never&#x27;, &#x27;都不会&#x27;, &#x27;根本不&#x27;]; suppresses: [&#x27;eko&#x27;, &#x27;&lt;quote&#x27;, &#x27;mx&#x27;, &#x27;Persistent&#x27;, &#x27;omi&#x27;, &#x27;boBox&#x27;, &#x27;下行&#x27;, &#x27;Kids&#x27;]</p>
+<ul><li>1.844:  , and Record of the Year , which [[ it]]  did not win</li><li>1.758:  and Record of the Year , which it [[ did]]  not win .</li><li>1.445:  Record of the Year , which it did [[ not]]  win . A</li><li>1.297:  won , and Record of the Year , [[ which]]  it did not</li></ul>
+<h4>L22 N2869</h4><p>logit lens promotes: [&#x27; apologize&#x27;, &#x27; sorry&#x27;, &#x27; apologies&#x27;, &#x27; apologise&#x27;, &#x27; apology&#x27;, &#x27;sorry&#x27;, &#x27; apolog&#x27;, &#x27; Sorry&#x27;]; suppresses: [&#x27;ANDLE&#x27;, &#x27;rost&#x27;, &#x27;variant&#x27;, &#x27;.firebase&#x27;, &#x27;至上&#x27;, &#x27;趋势&#x27;, &#x27; boost&#x27;, &#x27;istory&#x27;]</p>
+<ul><li>3.109: ou &#x27;s safehouse . Batou [[ explains]]  that her original</li><li>1.805:  Jardine wrote that Larwood had [[ asked]]  for the field</li><li>1.359:  on the same day as &quot; Here &#x27; [[s]]  Johnny &quot; .</li><li>1.305:  written the day before he died , Baltimore [[ bes]] eeched his</li></ul>
+<h4>L18 N7856</h4><p>logit lens promotes: [&#x27;砑&#x27;, &#x27;uhan&#x27;, &#x27;取&#x27;, &#x27;ROLLER&#x27;, &#x27;չ&#x27;, &#x27;[]&#x27;, &#x27;roller&#x27;, &#x27;用工&#x27;]; suppresses: [&#x27;ional&#x27;, &#x27;ionales&#x27;, &#x27;ProcessEvent&#x27;, &#x27;cheme&#x27;, &#x27;ational&#x27;, &#x27;Theory&#x27;, &#x27;acional&#x27;, &#x27;ions&#x27;]</p>
+<ul><li>2.062: In a negative [[ review]]  , Betsey</li><li>1.891: In 2 [[0]] 04 ,</li><li>1.891: In 2 [[0]] 04 ,</li><li>1.727:  , showed a report in June 2 [[0]] 14 that</li></ul>
+<h4>L17 N47</h4><p>logit lens promotes: [&#x27; rejected&#x27;, &#x27; disqualified&#x27;, &#x27; declined&#x27;, &#x27;.prevent&#x27;, &#x27; canceled&#x27;, &#x27; unconstitutional&#x27;, &#x27;不予&#x27;, &#x27; avoided&#x27;]; suppresses: [&#x27;诌&#x27;, &#x27; dar&#x27;, &#x27;挺&#x27;, &#x27;.fre&#x27;, &#x27;话语权&#x27;, &#x27;isas&#x27;, &#x27; tert&#x27;, &#x27;ѧ&#x27;]</p>
+<ul><li>0.738: ening in April . Bell attempted to have [[ the]]  legislation overturned .</li><li>0.652:  them on missions that would otherwise make Gall [[ia]]  lose face in</li><li>0.629:  in April . Bell attempted to have the [[ legislation]]  overturned . The</li><li>0.613: enathus self achieved status and settle [[ for]]  his formal loyalty</li></ul>
+<h4>L16 N3207</h4><p>logit lens promotes: [&#x27; missing&#x27;, &#x27;atform&#x27;, &#x27;期待&#x27;, &#x27; missed&#x27;, &#x27;missing&#x27;, &#x27;ynchron&#x27;, &#x27;�&#x27;, &#x27; vacancies&#x27;]; suppresses: [&#x27;危险&#x27;, &#x27;danger&#x27;, &#x27; danger&#x27;, &#x27; dangers&#x27;, &#x27; warnings&#x27;, &#x27; warned&#x27;, &#x27;风险管理&#x27;, &#x27;警告&#x27;]</p>
+<ul><li>1.195: lands in storing carbon and their rarity , [[ the]] </li><li>1.031:  still widely used in rural areas . However [[ ,]]  due to the</li><li>0.605: 5 – 12 November 1 [[9]] 79 )</li><li>0.598:  widely used in rural areas . However , [[ due]]  to the ecological</li></ul>
+<h4>L21 N3052</h4><p>logit lens promotes: [&#x27;作为&#x27;, &#x27;作為&#x27;, &#x27; as&#x27;, &#x27;作为一个&#x27;, &#x27;作为一名&#x27;, &#x27;作为一种&#x27;, &#x27;\tas&#x27;, &#x27; sebagai&#x27;]; suppresses: [&#x27;atsu&#x27;, &#x27;ponsored&#x27;, &#x27;硐&#x27;, &#x27;egin&#x27;, &#x27;sov&#x27;, &#x27;игра&#x27;, &#x27;*****/\n&#x27;, &#x27;فارق&#x27;]</p>
+<ul><li>6.25: As [[ a]]  result of the</li><li>5.531: His first 13 [[ games]]  for the club</li><li>4.562: Pokiri &#x27;s [[ success]]  elevated Mahesh</li><li>4.344: 981 . Mulhall &#x27;s [[ successor]]  , Roy Mc</li></ul>
+<h4>L22 N8806</h4><p>logit lens promotes: [&#x27; ourselves&#x27;, &#x27;ございます&#x27;, &#x27;ours&#x27;, &#x27;_LSB&#x27;, &#x27; Você&#x27;, &#x27; euch&#x27;, &#x27;しましょう&#x27;, &#x27;IMATE&#x27;]; suppresses: [&#x27;我&#x27;, &#x27; I&#x27;, &#x27;我在&#x27;, &#x27; my&#x27;, &#x27;我对&#x27;, &#x27;我要&#x27;, &#x27;我就&#x27;, &#x27;我不&#x27;]</p>
+<ul><li>1.734:  League of Communists of Croatia – Party [[ of]]  Democratic Changes (</li><li>1.719:  @,@ 643 @.@ [[ ]] 2 km2</li><li>1.43: æstən ˈvɪ [[l]] ə / ;</li><li>1.414:  association football club based in Aston , Birmingham [[ ,]]  that plays in</li></ul>
+<h4>L16 H7</h4><p>logit lens promotes: [&#x27;yny&#x27;, &#x27;未经授权&#x27;, &#x27;gef&#x27;, &#x27;.Undef&#x27;, &#x27;邪恶&#x27;, &#x27;ул&#x27;, &#x27;Uluslararası&#x27;, &#x27;舥&#x27;]; suppresses: [&#x27; mildly&#x27;, &#x27; mild&#x27;, &#x27;温和&#x27;, &#x27; segue&#x27;, &#x27;挈&#x27;, &#x27;(copy&#x27;, &#x27;分化&#x27;, &#x27;一半&#x27;]</p>
+<ul><li>9.769:  it on 9 September 19 [[4]] 7 . Law</li><li>9.635:  sanctioned it on 9 September 1 [[9]] 47 .</li><li>9.535:  before the House of Representatives sanctioned it on [[ ]] 9 September </li><li>9.167: 8th streets dropped 40 – [[ ]] 50 %</li></ul>
+<h4>L16 H8</h4><p>logit lens promotes: [&#x27;拒不&#x27;, &#x27;ENAME&#x27;, &#x27;不利于&#x27;, &#x27;抗拒&#x27;, &#x27;欺&#x27;, &#x27;毁&#x27;, &#x27;Ay&#x27;, &#x27;毫无&#x27;]; suppresses: [&#x27;edom&#x27;, &#x27;另一半&#x27;, &#x27;panion&#x27;, &#x27;atile&#x27;, &#x27;oko&#x27;, &#x27;ateral&#x27;, &#x27;-sidebar&#x27;, &#x27;ousel&#x27;]</p>
+<ul><li>10.819:  League ( 162 Premier League [[ goals]]  in total )</li><li>10.276:  which was demolished and replaced , in turn [[ ,]]  by Hungerford</li><li>10.089: 20 m ( 4 @,@ [[ ]] 000</li><li>10.086: 220 m ( 4 @ [[,@]]  00</li></ul>
+<h4>L19 H11</h4><p>logit lens promotes: [&#x27;这么说&#x27;, &#x27;这样说&#x27;, &#x27;不孕&#x27;, &#x27;恶性&#x27;, &#x27; LIABILITY&#x27;, &#x27;这样一个&#x27;, &#x27;shal&#x27;, &#x27;没有什么&#x27;]; suppresses: [&#x27;洳&#x27;, &#x27;磨&#x27;, &quot;&#x27;,[&quot;, &#x27;下半&#x27;, &#x27; Flo&#x27;, &#x27;ทะ&#x27;, &#x27; sop&#x27;, &#x27;ibu&#x27;]</p>
+<ul><li>12.601:  a challenge ; it was only the ten [[acity]]  of the New</li><li>12.538:  @-@ American Canal is supplied by [[ the]]  Imperial Dam .</li><li>12.358:  its head writer Adam McKay , a former [[ performer]]  at Second City</li><li>12.024:  Despite its name , it originated not in [[ the]]  Rocky Mountains ,</li></ul>
+<h4>L11 H10</h4><p>logit lens promotes: [&#x27;encodeURIComponent&#x27;, &#x27;.scalablytyped&#x27;, &#x27;闻言&#x27;, &#x27; Hentai&#x27;, &#x27;.gameserver&#x27;, &#x27;ósito&#x27;, &#x27;联社&#x27;, &#x27;-regexp&#x27;]; suppresses: [&#x27; Categories&#x27;, &#x27; Pe&#x27;, &#x27; Sk&#x27;, &#x27; flown&#x27;, &#x27;Speaker&#x27;, &#x27;Sk&#x27;, &#x27;鸥&#x27;, &#x27; campground&#x27;]</p>
+<ul><li>10.685:  performing shows with The Second City in  [[1]] 997</li><li>9.825:  . Featuring improved multiplayer gameplay , an improved [[ note]]  @-@</li><li>9.642:  from San Diego Bay , California . The [[ specific]]  epithet di</li><li>9.577:  with Shogakukan on releasing a Stop [[ !]]  ! Hibari</li></ul>
+<h4>L24 H6</h4><p>logit lens promotes: [&#x27; advice&#x27;, &#x27; Advice&#x27;, &#x27; advised&#x27;, &#x27; advise&#x27;, &#x27;Advice&#x27;, &#x27; advises&#x27;, &#x27;建议&#x27;, &#x27; questions&#x27;]; suppresses: [&#x27; signific&#x27;, &#x27;significant&#x27;, &#x27; significant&#x27;, &#x27; significance&#x27;, &#x27; Significant&#x27;, &#x27;results&#x27;, &#x27;Sign&#x27;, &#x27;意义&#x27;]</p>
+<ul><li>16.924:  New Jersey . Augustus T. Swift [[ called]]  the</li><li>15.969:  Walton Beach , Florida while storm warnings were [[ in]]  effect from Morgan</li><li>15.255:  with his brother @-@ in @ [[-]] @ law ,</li><li>14.889:  deciduous trees . Narrow @-@ [[ head]]  more</li></ul>
+<h4>L26 H8</h4><p>logit lens promotes: [&#x27; fake&#x27;, &#x27;假&#x27;, &#x27; Fake&#x27;, &#x27;fake&#x27;, &#x27; internet&#x27;, &#x27;(fake&#x27;, &#x27;.fake&#x27;, &#x27; dummy&#x27;]; suppresses: [&#x27;&lt;Base&#x27;, &#x27;_standard&#x27;, &#x27; STANDARD&#x27;, &#x27;uniform&#x27;, &#x27;native&#x27;, &#x27;.native&#x27;, &#x27;Standard&#x27;, &#x27;.standard&#x27;]</p>
+<ul><li>35.462:  approximately 26 km ( 1 [[6]]  mi ) from</li><li>35.079: 6 feet ( 0 @.@  [[9]] 65 m</li><li>32.511:  Republic of Texas when in 18 [[3]] 6 the interim</li><li>31.731:  Arab conquest of Palestine in the 6 [[3]] 0s @</li></ul>
+<h4>L15 H2</h4><p>logit lens promotes: [&#x27;llib&#x27;, &#x27;被抓&#x27;, &#x27;伪造&#x27;, &#x27;合法性&#x27;, &#x27;公众&#x27;, &#x27;簏&#x27;, &#x27;被捕&#x27;, &#x27;牌照&#x27;]; suppresses: [&#x27;_scheduler&#x27;, &#x27; convergence&#x27;, &#x27;alta&#x27;, &#x27; rhs&#x27;, &#x27;hana&#x27;, &#x27; conquer&#x27;, &#x27;UserRole&#x27;, &#x27;萘&#x27;]</p>
+<ul><li>8.17: 06 conference , and by April  [[2]] 007</li><li>7.891:  and Best Rap / Sung Collaboration , which [[ it]]  won , and</li><li>7.765:  when in 1836 the [[ interim]]  president David G</li><li>7.733:  Bonga the son of a freed slave [[ and]]  his mother a</li></ul>
+<h4>L16 H3</h4><p>logit lens promotes: [&#x27;coli&#x27;, &#x27;UNCH&#x27;, &#x27;。&lt;&#x27;, &#x27;&gt;(*&#x27;, &#x27;@param&#x27;, &#x27;纵&#x27;, &#x27;公&#x27;, &#x27; Collapse&#x27;]; suppresses: [&#x27;aeda&#x27;, &#x27; }])\n&#x27;, &#x27;topic&#x27;, &#x27;Tür&#x27;, &#x27;ente&#x27;, &#x27;Statics&#x27;, &#x27; pirate&#x27;, &#x27;entes&#x27;]</p>
+<ul><li>9.088:  part of the eastern section in St Clement [[ Dan]] es was in</li><li>8.844: urrican , a hamlet near [[ B]] roughshane</li><li>8.394:  flights being flown with the F @- [[@]]  2</li><li>8.336:  on Mahashivratri , the festival [[ of]]  Shiva ,</li></ul>
+<h4>L27 H5</h4><p>logit lens promotes: [&#x27; &#x27;, &#x27; and&#x27;, &#x27;_&#x27;, &#x27;,&#x27;, &#x27;.&#x27;, &#x27;-&#x27;, &#x27; in&#x27;, &#x27; the&#x27;]; suppresses: [&#x27;mPid&#x27;, &#x27; Cbd&#x27;, &#x27;rawid&#x27;, &#x27;hlen&#x27;, &#x27;Fourth&#x27;, &#x27; Clintons&#x27;, &#x27; Fourth&#x27;, &#x27;porno&#x27;]</p>
+<ul><li>34.434:  [[Alice]]  in Chains has</li><li>34.248: D [[ylan]]  &#x27;s voice</li><li>34.185:  [[Som]] erset finished as</li><li>33.677:  [[Ghost]]  in the Shell</li></ul>
+<h4>L19 H9</h4><p>logit lens promotes: [&#x27; inconvenience&#x27;, &#x27; copyright&#x27;, &#x27; profesional&#x27;, &#x27;uda&#x27;, &#x27;谤&#x27;, &#x27;ources&#x27;, &#x27;-source&#x27;, &#x27; injuries&#x27;]; suppresses: [&#x27;禧&#x27;, &#x27;:start&#x27;, &#x27;olio&#x27;, &#x27; pared&#x27;, &#x27; sized&#x27;, &#x27;гу&#x27;, &#x27; phased&#x27;, &#x27;늙&#x27;]</p>
+<ul><li>7.664:  the son of a freed slave and his [[ mother]]  a member of</li><li>7.531:  Birmingham , that plays in the Championship , [[ the]]  second level of</li><li>7.312:  son of a freed slave and his mother [[ a]]  member of the</li><li>7.257:  , The Villa , The Villans , [[ The]]  Lions ) is</li></ul>

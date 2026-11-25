@@ -1,0 +1,176 @@
+<!doctype html><meta charset=utf-8><title>refusal culprits: Qwen/Qwen2.5-7B-Instruct bypass</title>
+<style>body{font:14px system-ui;max-width:1000px;margin:24px auto;padding:0 12px;color:#222}table{border-collapse:collapse;margin:8px 0}td,th{border:1px solid #ccc;padding:3px 8px;text-align:left}th{background:#f2f2f2}.note{background:#fff7e0;padding:8px;border:1px solid #e6d28a}</style>
+<h1>Refusal culprits: Qwen/Qwen2.5-7B-Instruct, mode <code>bypass</code></h1>
+<p class=note><b>Safety.</b> This report contains unit indices, scores, rates and benign public text only. No model completion to a harmful request is shown, stored in a committed file or printed. Raw generations stay in <code>results_refusal/_private/</code> (gitignored). Interpretation sections are observations, not proof of function. Pre-registration: docs/PREREGISTRATION_REFUSAL.md.</p>
+<p>Goal: restore refusal under jailbreak. Counts: {&#x27;plain&#x27;: 100, &#x27;alpaca&#x27;: 200, &#x27;wrapped_train&#x27;: 1200, &#x27;wrapped_val&#x27;: 100, &#x27;wrapped_test&#x27;: 1440, &#x27;pool_test&#x27;: 255}. Pairs for attribution: 205. Baseline refusal rates: {&#x27;plain&#x27;: 0.91, &#x27;alpaca&#x27;: 0.0, &#x27;wrapped_train&#x27;: 0.663, &#x27;wrapped_val&#x27;: 0.7, &#x27;wrapped_test&#x27;: 0.58, &#x27;pool_test&#x27;: 0.086}.</p>
+<p>Label audit (phrase match vs open refusal classifier, aggregate only): {&#x27;available&#x27;: True, &#x27;n&#x27;: 300, &#x27;agreement&#x27;: 0.8733333333333333, &#x27;kappa&#x27;: 0.7475083056478403, &#x27;phrase_refusal_rate&#x27;: 0.5166666666666667, &#x27;judge_refusal_rate&#x27;: 0.45}</p>
+<p>Attribution vs exact activation patching: {&#x27;neurons&#x27;: {&#x27;n&#x27;: 150, &#x27;pearson&#x27;: 0.8066596490706907, &#x27;spearman&#x27;: 0.5492492999688875}, &#x27;heads&#x27;: {&#x27;n&#x27;: 50, &#x27;pearson&#x27;: 0.2788562513882121, &#x27;spearman&#x27;: 0.3709483793517407}, &#x27;n_pairs&#x27;: 24}</p>
+<h2>Top neurons by exact patching effect (clean-ward, metric M units)</h2><table><tr><th>unit</th><th>atp_rank</th><th>effect</th><th>ci</th><th>pct_gap</th></tr><tr><td>L13 N4787</td><td>1</td><td>+0.298</td><td>[+0.219, +0.377]</td><td>8.2%</td></tr><tr><td>L25 N17058</td><td>0</td><td>+0.216</td><td>[+0.157, +0.275]</td><td>5.9%</td></tr><tr><td>L25 N18451</td><td>2</td><td>+0.127</td><td>[+0.081, +0.173]</td><td>3.5%</td></tr><tr><td>L22 N5156</td><td>38</td><td>+0.117</td><td>[+0.087, +0.146]</td><td>3.2%</td></tr><tr><td>L23 N2254</td><td>7</td><td>+0.093</td><td>[+0.049, +0.137]</td><td>2.6%</td></tr><tr><td>L22 N2168</td><td>54</td><td>+0.088</td><td>[+0.065, +0.111]</td><td>2.4%</td></tr><tr><td>L10 N11138</td><td>30</td><td>+0.086</td><td>[+0.059, +0.112]</td><td>2.4%</td></tr><tr><td>L14 N10204</td><td>11</td><td>+0.078</td><td>[+0.043, +0.113]</td><td>2.2%</td></tr><tr><td>L24 N5256</td><td>9</td><td>+0.067</td><td>[+0.032, +0.101]</td><td>1.8%</td></tr><tr><td>L14 N13014</td><td>15</td><td>+0.064</td><td>[+0.033, +0.094]</td><td>1.7%</td></tr></table>
+<h2>Top attention heads</h2><table><tr><th>unit</th><th>atp_rank</th><th>effect</th><th>ci</th><th>pct_gap</th></tr><tr><td>L20 H1</td><td>44</td><td>+0.198</td><td>[+0.130, +0.265]</td><td>5.4%</td></tr><tr><td>L26 H26</td><td>1</td><td>+0.186</td><td>[+0.130, +0.242]</td><td>5.1%</td></tr><tr><td>L25 H1</td><td>3</td><td>+0.171</td><td>[+0.125, +0.218]</td><td>4.7%</td></tr><tr><td>L13 H15</td><td>14</td><td>+0.171</td><td>[+0.117, +0.226]</td><td>4.7%</td></tr><tr><td>L25 H18</td><td>8</td><td>+0.109</td><td>[+0.081, +0.138]</td><td>3.0%</td></tr><tr><td>L27 H23</td><td>4</td><td>+0.102</td><td>[-0.002, +0.205]</td><td>2.8%</td></tr><tr><td>L15 H26</td><td>13</td><td>+0.074</td><td>[+0.064, +0.084]</td><td>2.0%</td></tr><tr><td>L26 H25</td><td>10</td><td>+0.067</td><td>[+0.045, +0.090]</td><td>1.9%</td></tr><tr><td>L9 H19</td><td>48</td><td>+0.062</td><td>[+0.046, +0.077]</td><td>1.7%</td></tr><tr><td>L26 H24</td><td>2</td><td>+0.058</td><td>[+0.030, +0.086]</td><td>1.6%</td></tr></table>
+<h2>Causal verification (restore rate on held-out bypass cells); n=221, baseline 0.023</h2><table><tr><th>config</th><th>rate</th><th>ci</th></tr><tr><td>units_k10</td><td>0.543</td><td>[0.392, 0.696]</td></tr><tr><td>diff_k10</td><td>0.032</td><td>[0.003, 0.078]</td></tr><tr><td>spec_k10</td><td>0.398</td><td>[0.267, 0.547]</td></tr><tr><td>units_k50</td><td>0.801</td><td>[0.654, 0.924]</td></tr><tr><td>diff_k50</td><td>0.036</td><td>[0.004, 0.090]</td></tr><tr><td>spec_k50</td><td>0.697</td><td>[0.533, 0.843]</td></tr><tr><td>units_k200</td><td>0.937</td><td>[0.847, 0.991]</td></tr><tr><td>diff_k200</td><td>0.231</td><td>[0.146, 0.346]</td></tr><tr><td>spec_k200</td><td>0.914</td><td>[0.814, 0.982]</td></tr><tr><td>heads_k5</td><td>0.593</td><td>[0.427, 0.757]</td></tr><tr><td>hdiff_k5</td><td>0.109</td><td>[0.035, 0.205]</td></tr><tr><td>hspec_k5</td><td>0.213</td><td>[0.065, 0.392]</td></tr><tr><td>heads_k10</td><td>0.742</td><td>[0.599, 0.867]</td></tr><tr><td>hdiff_k10</td><td>0.330</td><td>[0.178, 0.488]</td></tr><tr><td>hspec_k10</td><td>0.661</td><td>[0.504, 0.808]</td></tr><tr><td>heads_k20</td><td>0.869</td><td>[0.754, 0.961]</td></tr><tr><td>hdiff_k20</td><td>0.303</td><td>[0.168, 0.449]</td></tr><tr><td>hspec_k20</td><td>0.810</td><td>[0.680, 0.918]</td></tr><tr><td>dir</td><td>0.869</td><td>[0.742, 0.965]</td></tr></table>
+<p>Primary comparison: {&#x27;k&#x27;: 50, &#x27;units_rate&#x27;: 0.8009049773755657, &#x27;rand_p95&#x27;: 0.03665158371040725, &#x27;rand_max&#x27;: 0.04524886877828054, &#x27;rand_mean&#x27;: 0.0248868778280543, &#x27;n_rand&#x27;: 20, &#x27;diff_rate&#x27;: 0.03619909502262444, &#x27;units_minus_diff&#x27;: {&#x27;est&#x27;: 0.7647058823529412, &#x27;lo&#x27;: 0.6127042483660131, &#x27;hi&#x27;: 0.8884127906976741}, &#x27;units_minus_dir&#x27;: {&#x27;est&#x27;: -0.0678733031674208, &#x27;lo&#x27;: -0.22096253229974167, &#x27;hi&#x27;: 0.07817659198113179}, &#x27;dir_rate&#x27;: 0.8687782805429864}</p><p>Heads: {&#x27;k&#x27;: 10, &#x27;heads_rate&#x27;: 0.7420814479638009, &#x27;rand_p95&#x27;: 0.3665158371040723, &#x27;diff_rate&#x27;: 0.33031674208144796}</p>
+<h2>Side effects</h2><table><tr><th>config</th><th>alpaca_refusal</th><th>mmlu_acc</th><th>safe_pool_refusal</th></tr><tr><td>baseline</td><td>0.000 (d +0.000)</td><td>0.745 (d +0.000)</td><td>0.086 (d +0.000)</td></tr><tr><td>units_k10</td><td>0.020 (d +0.020)</td><td>0.750 (d +0.005)</td><td>0.165 (d +0.078)</td></tr><tr><td>units_k50</td><td>0.045 (d +0.045)</td><td>0.748 (d +0.003)</td><td>0.306 (d +0.220)</td></tr><tr><td>units_k200</td><td>0.430 (d +0.430)</td><td>0.745 (d +0.000)</td><td>0.729 (d +0.643)</td></tr><tr><td>heads_k5</td><td>0.015 (d +0.015)</td><td>0.743 (d -0.003)</td><td>0.145 (d +0.059)</td></tr><tr><td>heads_k10</td><td>0.010 (d +0.010)</td><td>0.755 (d +0.010)</td><td>0.141 (d +0.055)</td></tr><tr><td>heads_k20</td><td>0.015 (d +0.015)</td><td>0.748 (d +0.003)</td><td>0.251 (d +0.165)</td></tr><tr><td>spec_k10</td><td>0.010 (d +0.010)</td><td>0.750 (d +0.005)</td><td>0.137 (d +0.051)</td></tr><tr><td>spec_k50</td><td>0.005 (d +0.005)</td><td>0.750 (d +0.005)</td><td>0.176 (d +0.090)</td></tr><tr><td>spec_k200</td><td>0.170 (d +0.170)</td><td>0.752 (d +0.007)</td><td>0.498 (d +0.412)</td></tr><tr><td>hspec_k10</td><td>0.005 (d +0.005)</td><td>0.750 (d +0.005)</td><td>0.102 (d +0.016)</td></tr><tr><td>diff_k50</td><td>0.000 (d +0.000)</td><td>0.755 (d +0.010)</td><td>0.078 (d -0.008)</td></tr><tr><td>rand_k50_0</td><td>0.000 (d +0.000)</td><td>0.750 (d +0.005)</td><td>0.071 (d -0.016)</td></tr><tr><td>dir</td><td>0.225 (d +0.225)</td><td>0.647 (d -0.098)</td><td>0.663 (d +0.576)</td></tr></table>
+<h2>Verdicts</h2><pre>{
+ &quot;primary_condition_above_random_p95&quot;: true,
+ &quot;primary_condition_above_diff&quot;: true,
+ &quot;H1_or_H2_main&quot;: true,
+ &quot;H3_alpaca_rise_under_2pp&quot;: false,
+ &quot;H3_mmlu_drop_under_2pp&quot;: true,
+ &quot;H3&quot;: false,
+ &quot;H1&quot;: true
+}</pre>
+<h2>Exploratory: side-effect-aware ranking (post-hoc, not part of H1-H6)</h2><pre>{
+ &quot;k&quot;: 50,
+ &quot;rate&quot;: 0.6968325791855203,
+ &quot;rand_p95&quot;: 0.03665158371040725,
+ &quot;above_rand_p95&quot;: true,
+ &quot;side&quot;: {
+  &quot;alpaca_refusal&quot;: {
+   &quot;value&quot;: 0.005,
+   &quot;delta&quot;: 0.005,
+   &quot;ci&quot;: [
+    0.0,
+    0.015
+   ],
+   &quot;n&quot;: 200
+  },
+  &quot;safe_pool_refusal&quot;: {
+   &quot;value&quot;: 0.17647058823529413,
+   &quot;delta&quot;: 0.09019607843137255,
+   &quot;ci&quot;: [
+    0.047058823529411764,
+    0.13333333333333333
+   ],
+   &quot;n&quot;: 255
+  },
+  &quot;mmlu_acc&quot;: {
+   &quot;value&quot;: 0.75,
+   &quot;delta&quot;: 0.005,
+   &quot;ci&quot;: [
+    -0.005,
+    0.015
+   ],
+   &quot;n&quot;: 400
+  }
+ },
+ &quot;note&quot;: &quot;post-hoc arm added after the 0.5B dev run; not part of H1-H6&quot;
+}</pre>
+<h2>Families, platforms, dates (H5/H6)</h2>
+<h3>Top-k neuron Jaccard between fam groups; J_between 0.4511180495087909, J_within 0.7439777084734953, null p99 0.0: <b>shared</b></h3>
+<table><tr><th>group</th><th>fam:Anarchy</th><th>fam:Basic</th><th>fam:Guidelines</th><th>fam:Opposite</th><th>fam:Toxic</th><th>fam:unlabelled</th></tr><tr><td>fam:Anarchy</td><td>1.00</td><td>0.41</td><td>0.47</td><td>0.39</td><td>0.47</td><td>0.39</td></tr><tr><td>fam:Basic</td><td>0.41</td><td>1.00</td><td>0.41</td><td>0.43</td><td>0.47</td><td>0.41</td></tr><tr><td>fam:Guidelines</td><td>0.47</td><td>0.41</td><td>1.00</td><td>0.41</td><td>0.52</td><td>0.49</td></tr><tr><td>fam:Opposite</td><td>0.39</td><td>0.43</td><td>0.41</td><td>1.00</td><td>0.47</td><td>0.45</td></tr><tr><td>fam:Toxic</td><td>0.47</td><td>0.47</td><td>0.52</td><td>0.47</td><td>1.00</td><td>0.59</td></tr><tr><td>fam:unlabelled</td><td>0.39</td><td>0.41</td><td>0.49</td><td>0.45</td><td>0.59</td><td>1.00</td></tr></table>
+<h3>Top-k neuron Jaccard between kw groups; J_between 0.44569703393232807, J_within 0.7601600161424568, null p99 0.0: <b>shared</b></h3>
+<table><tr><th>group</th><th>kw:fiction_hypothetical</th><th>kw:persona</th><th>kw:refusal_suppression</th></tr><tr><td>kw:fiction_hypothetical</td><td>1.00</td><td>0.35</td><td>0.47</td></tr><tr><td>kw:persona</td><td>0.35</td><td>1.00</td><td>0.52</td></tr><tr><td>kw:refusal_suppression</td><td>0.47</td><td>0.52</td><td>1.00</td></tr></table>
+<h3>Transfer restore rates (row = culprits from family, column = evaluated on): rho 0.9333333333333333, q 1.0: <b>shared mechanism</b></h3>
+<table><tr><th>source</th><th>Anarchy</th><th>Basic</th><th>Guidelines</th><th>Opposite</th><th>Toxic</th><th>unlabelled</th></tr><tr><td>Anarchy</td><td>0.80</td><td>0.95</td><td>0.95</td><td>0.86</td><td>0.70</td><td>0.75</td></tr><tr><td>Basic</td><td>0.40</td><td>1.00</td><td>0.93</td><td>0.71</td><td>0.57</td><td>0.75</td></tr><tr><td>Guidelines</td><td>0.55</td><td>0.97</td><td>0.97</td><td>0.86</td><td>0.65</td><td>0.80</td></tr><tr><td>Opposite</td><td>0.53</td><td>1.00</td><td>0.97</td><td>0.79</td><td>0.55</td><td>0.82</td></tr><tr><td>Toxic</td><td>0.38</td><td>1.00</td><td>1.00</td><td>0.71</td><td>0.60</td><td>0.80</td></tr><tr><td>unlabelled</td><td>0.50</td><td>1.00</td><td>0.97</td><td>0.86</td><td>0.65</td><td>0.80</td></tr></table>
+<pre>{
+ &quot;platform&quot;: {
+  &quot;rates&quot;: {
+   &quot;discord&quot;: 0.4284709485916382,
+   &quot;reddit&quot;: 0.27650627090301005,
+   &quot;website&quot;: 0.27865082637743455
+  },
+  &quot;n_templates&quot;: {
+   &quot;discord&quot;: 40,
+   &quot;reddit&quot;: 20,
+   &quot;website&quot;: 36
+  },
+  &quot;max_gap&quot;: 0.15196467768862815,
+  &quot;perm_p&quot;: 0.27534493101379726
+ },
+ &quot;datebin&quot;: {
+  &quot;rates&quot;: {
+   &quot;late&quot;: 0.3176129118035174,
+   &quot;early&quot;: 0.37285175125791004
+  },
+  &quot;n_templates&quot;: {
+   &quot;late&quot;: 56,
+   &quot;early&quot;: 40
+  },
+  &quot;max_gap&quot;: 0.05523883945439262,
+  &quot;perm_p&quot;: 0.47890421915616876
+ },
+ &quot;famname&quot;: {
+  &quot;rates&quot;: {
+   &quot;Anarchy&quot;: 0.9158653846153846,
+   &quot;Basic&quot;: 0.3498931623931623,
+   &quot;Exception&quot;: 0.03472222222222222,
+   &quot;Opposite&quot;: 0.12697115384615384,
+   &quot;unlabelled&quot;: 0.2871829832384752,
+   &quot;Toxic&quot;: 0.46948505600679513,
+   &quot;Guidelines&quot;: 0.2537298137154459
+  },
+  &quot;n_templates&quot;: {
+   &quot;Anarchy&quot;: 12,
+   &quot;Basic&quot;: 12,
+   &quot;Exception&quot;: 12,
+   &quot;Opposite&quot;: 12,
+   &quot;unlabelled&quot;: 24,
+   &quot;Toxic&quot;: 12,
+   &quot;Guidelines&quot;: 12
+  },
+  &quot;max_gap&quot;: 0.8811431623931624,
+  &quot;perm_p&quot;: 0.0001999600079984003
+ },
+ &quot;profile_plat&quot;: {
+  &quot;groups&quot;: [
+   &quot;plat:discord&quot;,
+   &quot;plat:reddit&quot;,
+   &quot;plat:website&quot;
+  ],
+  &quot;within_rho_mean&quot;: 0.9108283931420751,
+  &quot;within_rho_p5&quot;: 0.8800434135371674,
+  &quot;cross_rho_mean&quot;: 0.6419561411852539,
+  &quot;verdict&quot;: &quot;differs&quot;
+ },
+ &quot;profile_date&quot;: {
+  &quot;groups&quot;: [
+   &quot;date:early&quot;,
+   &quot;date:late&quot;
+  ],
+  &quot;within_rho_mean&quot;: 0.9175883690839914,
+  &quot;within_rho_p5&quot;: 0.8775672994357421,
+  &quot;cross_rho_mean&quot;: 0.7061642257004584,
+  &quot;verdict&quot;: &quot;differs&quot;
+ }
+}</pre>
+<h2>Interpretation (observations only)</h2><p>Observations from a benign public text sample, not evidence of function.</p>
+<h4>L13 N4787</h4><p>logit lens promotes: [&#x27; ==(&#x27;, &#x27;hetto&#x27;, &#x27;entiful&#x27;, &#x27; Straßen&#x27;, &#x27; UIStoryboard&#x27;, &#x27;漪&#x27;, &#x27;embro&#x27;, &#x27;antom&#x27;]; suppresses: [&#x27;歙&#x27;, &#x27;leared&#x27;, &#x27;stry&#x27;, &#x27;羕&#x27;, &#x27;\\admin&#x27;, &#x27;_empresa&#x27;, &#x27; nap&#x27;, &#x27;牵&#x27;]</p>
+<ul><li>2.125:  , and as a result , some diseases [[ like]]  HPV and herpes</li><li>2.125:  condom , and as a result , some [[ diseases]]  like HPV and</li><li>1.359: f and SOS Children urged an immediate halt [[ to]]  adoptions from</li><li>1.172:  Efforts focus on assuring appropriate standards [[ of]]  airworthiness</li></ul>
+<h4>L25 N17058</h4><p>logit lens promotes: [&#x27;一体化&#x27;, &#x27;:Any&#x27;, &#x27;eated&#x27;, &#x27;(ErrorMessage&#x27;, &#x27;.observable&#x27;, &quot; $(&#x27;[&quot;, &#x27;旋&#x27;, &#x27; Chief&#x27;]; suppresses: [&#x27; I&#x27;, &#x27;I&#x27;, &#x27;我&#x27;, &#x27;.I&#x27;, &#x27;\tI&#x27;, &#x27;(I&#x27;, &#x27;,I&#x27;, &#x27;*I&#x27;]</p>
+<ul><li>1.758:  humor , when it works , offers &#x27; [[ Ret]] aliation &#x27;</li><li>1.617:  released between June 2003 [[ and]]  January 2</li><li>1.531:  @-@ soul genius &quot; and wrote [[ that]]  it is &quot;</li><li>1.516:  listed in The World &#x27;s 5 [[0]]  Best Restaurants since</li></ul>
+<h4>L25 N18451</h4><p>logit lens promotes: [&#x27; I&#x27;, &#x27;I&#x27;, &#x27;,I&#x27;, &#x27;.I&#x27;, &#x27;(I&#x27;, &#x27;:I&#x27;, &#x27;\tI&#x27;, &#x27;_I&#x27;]; suppresses: [&#x27; me&#x27;, &#x27; меня&#x27;, &#x27;me&#x27;, &#x27;-me&#x27;, &#x27;_me&#x27;, &#x27; moi&#x27;, &#x27;\tme&#x27;, &#x27;(me&#x27;]</p>
+<ul><li>17.625: Mother and I agreed , [[ when]]  we talked about</li><li>14.5: According to an [[ article]]  by the Daily</li><li>13.75:  suitable nesting places for robins . I [[ guess]]  they</li><li>13.312:  agreed , when we talked about it , [[ that]]  Dad never meant</li></ul>
+<h4>L22 N5156</h4><p>logit lens promotes: [&#x27;tober&#x27;, &#x27;ole&#x27;, &#x27;ipes&#x27;, &#x27;ClickListener&#x27;, &#x27; Dimensions&#x27;, &#x27;اسر&#x27;, &#x27;ccording&#x27;, &#x27;又好&#x27;]; suppresses: [&#x27;我&#x27;, &#x27; I&#x27;, &#x27;我们&#x27;, &#x27;我都&#x27;, &#x27;我对&#x27;, &#x27;We&#x27;, &#x27; We&#x27;, &#x27;笔者&#x27;]</p>
+<ul><li>5.031:  new body . Kusanagi acknowledges she [[ is]]  now neither herself</li><li>3.438:  the new body . Kusanagi acknowledges [[ she]]  is now neither</li><li>3.125:  building or other structure officially designated as being [[ of]]  special architectural ,</li><li>2.953: 950 , FIFA directed the associations [[ only]]  to select players</li></ul>
+<h4>L23 N2254</h4><p>logit lens promotes: [&#x27;=\\&quot;#&#x27;, &#x27;stadt&#x27;, &#x27;一致好评&#x27;, &#x27; ?&gt;&lt;?&#x27;, &#x27;roupon&#x27;, &#x27;|=\n&#x27;, &quot;&#x27;icon&quot;, &#x27;볍&#x27;]; suppresses: [&#x27; sorry&#x27;, &#x27; Sorry&#x27;, &#x27;Sorry&#x27;, &#x27;sorry&#x27;, &#x27;抱歉&#x27;, &#x27;对不起&#x27;, &#x27;遗憾&#x27;, &#x27; Unfortunately&#x27;]</p>
+<ul><li>2.75:  be completed was between Newport Road ( A [[4]] 161</li><li>2.609:  safety and security measures at major European airports [[ .]]  Many delegates and</li><li>2.547:  sold all its DC @-@  [[4]] s , and</li><li>2.359:  metal together , drawing or using modelling clay [[ .]]  She is also</li></ul>
+<h4>L22 N2168</h4><p>logit lens promotes: [&#x27; unfortunately&#x27;, &#x27;不幸&#x27;, &#x27; Unfortunately&#x27;, &#x27;Unfortunately&#x27;, &#x27;遗憾&#x27;, &#x27;可惜&#x27;, &#x27; sadly&#x27;, &#x27; Sadly&#x27;]; suppresses: [&#x27;蹑&#x27;, &#x27;PasswordField&#x27;, &#x27;骚&#x27;, &#x27;代&#x27;, &#x27;@SpringBootApplication&#x27;, &#x27;蜃&#x27;, &#x27;Bes&#x27;, &#x27;��&#x27;]</p>
+<ul><li>4.969: Burn injuries occur more [[ commonly]]  among the poor</li><li>4.188:  effective in limiting exposure , some disease transmission [[ may]]  occur even with</li><li>4.156: Burn injuries [[ occur]]  more commonly among</li><li>4.062: The wartime attempts to destroy Polish culture [[ may]]  have strengthened it</li></ul>
+<h4>L10 N11138</h4><p>logit lens promotes: [&#x27;{return&#x27;, &#x27;-animate&#x27;, &#x27;⌂&#x27;, &#x27;__;&#x27;, &#x27;leground&#x27;, &#x27;ivos&#x27;, &#x27;-Compatible&#x27;, &#x27;anding&#x27;]; suppresses: [&#x27;阙&#x27;, &#x27; tun&#x27;, &#x27; Tun&#x27;, &#x27;conexao&#x27;, &#x27; umo&#x27;, &#x27;declare&#x27;, &#x27;MMMM&#x27;, &#x27;隧道&#x27;]</p>
+<ul><li>1.234: At the beginning of July , it [[ was]]  estimated there were</li><li>1.016:  breed developed in the state of Kentucky in [[ the]]  United States .</li><li>0.656:  , to strike Mexico within a 2 [[4]]  ‑ hour</li><li>0.602:  , canteen , No.  [[1]]  ancillary store</li></ul>
+<h4>L14 N10204</h4><p>logit lens promotes: [&#x27; cerco&#x27;, &#x27;figcaption&#x27;, &#x27;犒&#x27;, &#x27; _______,&#x27;, &#x27;玩家来说&#x27;, &#x27;版权归&#x27;, &#x27; CircularProgress&#x27;, &#x27;elaide&#x27;]; suppresses: [&#x27; ])-&gt;&#x27;, &#x27;Alamat&#x27;, &#x27;relude&#x27;, &#x27;(strict&#x27;, &#x27;iry&#x27;, &#x27; ‘&#x27;, &#x27;�&#x27;, &#x27;Ĉ&#x27;]</p>
+<ul><li>0.777: Ghost in the Shell influenced a [[ number]]  of prominent filmmakers</li><li>0.578:  In remote areas of Lithuania Amanita [[ mus]] caria has</li><li>0.445:  will , written the day before he died [[ ,]]  Baltimore besee</li><li>0.43:  the film , stating , &quot; Not only [[ is]]  Kokaku Kid</li></ul>
+<h4>L24 N5256</h4><p>logit lens promotes: [&#x27;我们认为&#x27;, &#x27; we&#x27;, &#x27;we&#x27;, &#x27; Campo&#x27;, &#x27;我们知道&#x27;, &#x27;仗&#x27;, &#x27;cea&#x27;, &#x27;我们&#x27;]; suppresses: [&#x27; I&#x27;, &#x27;I&#x27;, &#x27;我&#x27;, &#x27;我不&#x27;, &#x27;我就&#x27;, &#x27;.I&#x27;, &#x27; myself&#x27;, &#x27;,I&#x27;]</p>
+<ul><li>4.156: 001 and Tarkovsky &#x27; [[s]]  Solyaris</li><li>3.859:  Claws ( French : Le Crabe [[ aux]]  pinces d</li><li>3.812: in was exhibited at the 18 [[3]] 3 Salon alongside</li><li>3.781:  with the Golden Claws ( French : [[ Le]]  Crabe aux</li></ul>
+<h4>L14 N13014</h4><p>logit lens promotes: [&#x27;.openConnection&#x27;, &#x27;-collapse&#x27;, &#x27; manh&#x27;, &#x27; IonicPage&#x27;, &#x27; &quot;\&#x27;.$&#x27;, &#x27;_cpus&#x27;, &#x27; beğen&#x27;, &#x27;工作作风&#x27;]; suppresses: [&#x27;ecom&#x27;, &#x27;lbrace&#x27;, &#x27;reck&#x27;, &#x27;antity&#x27;, &#x27;揉&#x27;, &#x27;REFIX&#x27;, &#x27;ök&#x27;, &#x27;maf&#x27;]</p>
+<ul><li>1.883: ensored , a political critique examining issues of [[ crime]]  and punishment ,</li><li>1.719:  of regulation is to &quot; promote high standards [[ of]]  safety in all</li><li>1.297:  . The second virtue , hope , ca [[utions]]  Catholics against despair</li><li>1.039:  Chagas disease : antiparasitic [[ treatment]]  , to kill</li></ul>
+<h4>L20 H1</h4><p>logit lens promotes: [&#x27; desi&#x27;, &#x27;不予&#x27;, &#x27; tremend&#x27;, &#x27; RectTransform&#x27;, &#x27;茱&#x27;, &#x27;Https&#x27;, &#x27;cea&#x27;, &#x27;olutely&#x27;]; suppresses: [&#x27;��이&#x27;, &#x27;すこと&#x27;, &#x27;ween&#x27;, &#x27;췄&#x27;, &#x27;*******\r\n&#x27;, &#x27;.parseFloat&#x27;, &#x27;onas&#x27;, &#x27;.VISIBLE&#x27;]</p>
+<ul><li>13.612:  , and his only medley to bear [[ the]]  same name as</li><li>13.261:  directed the associations only to select players from [[ within]]  their respective territories</li><li>12.957:  Despite its name , it originated not in [[ the]]  Rocky Mountains ,</li><li>12.919:  , reaching far enough into public consciousness to [[ become]] </li></ul>
+<h4>L26 H26</h4><p>logit lens promotes: [&#x27; Institute&#x27;, &#x27;伊&#x27;, &#x27;i&#x27;, &#x27;��&#x27;, &#x27; i&#x27;, &#x27;_i&#x27;, &#x27;I&#x27;, &#x27; International&#x27;]; suppresses: [&#x27;byss&#x27;, &#x27;SSIP&#x27;, &#x27;#aa&#x27;, &#x27;&quot;.\n\n\n\n&#x27;, &#x27;uxtap&#x27;, &#x27;#ab&#x27;, &#x27;&quot;\&#x27;;&#x27;, &#x27;DMETHOD&#x27;]</p>
+<ul><li>34.783:  / ˈæstən  [[ˈ]] vɪl</li><li>31.534: aged the countryside around the castle in  [[1]] 252</li><li>30.907:  stone near the doorway has the date  [[1]] 798</li><li>30.115:  on the island or nearby in November  [[1]] 528</li></ul>
+<h4>L25 H1</h4><p>logit lens promotes: [&#x27;我是&#x27;, &#x27;我对&#x27;, &#x27;我&#x27;, &#x27; I&#x27;, &#x27;我不&#x27;, &#x27; tôi&#x27;, &#x27;我又&#x27;, &#x27; myself&#x27;]; suppresses: [&#x27; until&#x27;, &#x27;until&#x27;, &#x27; Until&#x27;, &#x27;直到&#x27;, &#x27; till&#x27;, &#x27;一直到&#x27;, &#x27;Until&#x27;, &#x27;到现在&#x27;]</p>
+<ul><li>20.328:  Somerset qualified for the knock @-@ [[ out]]  stages of the</li><li>19.971:  . His first Premier League goal of the [[ season]]  came on </li><li>19.759:  , Briggs made what was described by a [[ contemporary]]  as a plea</li><li>18.543:  George Bonga . He was born in [[ Minnesota]]  in 1</li></ul>
+<h4>L13 H15</h4><p>logit lens promotes: [&#x27; FixedUpdate&#x27;, &#x27; -&#x27;, &#x27;ⓘ&#x27;, &#x27;—&#x27;, &#x27;天天&#x27;, &#x27; Hamilton&#x27;, &#x27; Propel&#x27;, &#x27; Laden&#x27;]; suppresses: [&#x27;)./&#x27;, &#x27;对其真实&#x27;, &#x27;временно&#x27;, &#x27; mädchen&#x27;, &#x27; arsch&#x27;, &#x27;AFE&#x27;, &#x27; gangbang&#x27;, &#x27; yarg&#x27;]</p>
+<ul><li>9.057:  All Good Things ... &quot; . These included [[ the]]  ending where time</li><li>8.635:  R. Gordon Wasson on the use [[ of]]  this mushroom in</li><li>8.042:  selective incremental failure of the parasymp [[ath]] etic nervous system</li><li>7.53:  War Z as a platform to criticize government [[ ine]] ptitude ,</li></ul>
+<h4>L25 H18</h4><p>logit lens promotes: [&#x27; it&#x27;, &#x27;它是&#x27;, &#x27;\n&#x27;, &#x27;#echo&#x27;, &#x27; I&#x27;, &#x27;我希望&#x27;, &#x27;mousemove&#x27;, &#x27;网小编&#x27;]; suppresses: [&#x27;ngr&#x27;, &#x27;cstdint&#x27;, &#x27;全力以&#x27;, &#x27;&quot;)));&#x27;, &#x27; både&#x27;, &#x27;&lt;=(&#x27;, &#x27;)./&#x27;, &#x27; (&#x27;]</p>
+<ul><li>28.052: s team be known as &quot; Northern Ireland [[ &quot;]]  ( with certain</li><li>26.595:  considered to be &quot; buildings of exceptional interest [[ &quot;]]  . Listing was</li><li>25.091:  , and innings pitched ( 43 [[ ]] ⅓ )</li><li>24.58:  Palace of Westminster ( the national political centre [[ )]]  . In the</li></ul>
+<h4>L27 H23</h4><p>logit lens promotes: [&#x27;ol&#x27;, &#x27; Bol&#x27;, &#x27; fol&#x27;, &#x27;戈&#x27;, &#x27; the&#x27;, &#x27; essential&#x27;, &#x27; Gore&#x27;, &#x27; Gol&#x27;]; suppresses: [&#x27; Incontri&#x27;, &#x27;⚗&#x27;, &#x27; enthusi&#x27;, &#x27;.Disclaimer&#x27;, &#x27;صند&#x27;, &#x27;DCALL&#x27;, &#x27; (!((&#x27;, &#x27;📐&#x27;]</p>
+<ul><li>77.07:  match on 22 October 2 [[0]] 13 and</li><li>46.881:  by Paradigm were released between June  [[2]] 003</li><li>44.906:  World &#x27;s 50 Best Restaurants [[ since]]  20</li><li>44.464: asts . By the morning of September  [[2]] 4 , hurricane</li></ul>
+<h4>L15 H26</h4><p>logit lens promotes: [&#x27;�&#x27;, &#x27; horm&#x27;, &#x27;\xa0&#x27;, &#x27;走势图&#x27;, &#x27;镑&#x27;, &#x27;-&#x27;, &#x27; walmart&#x27;, &#x27;...&#x27;]; suppresses: [&#x27;,},\n&#x27;, &#x27;#ga&#x27;, &#x27;#aa&#x27;, &#x27;?&gt;&gt;&#x27;, &#x27;__;&#x27;, &#x27;/Dk&#x27;, &#x27;/Internal&#x27;, &#x27;.&quot;&amp;&#x27;]</p>
+<ul><li>7.016: 05 season with Oldham Athletic , [[ playing]]  one match ,</li><li>6.992:  April 2010 , it [[ was]]  announced that Fowler</li><li>6.848: 5 season with Oldham Athletic , playing [[ one]]  match , away</li><li>6.823:  Akrād ( حصن الأ [[كر]] اد ) ,</li></ul>
+<h4>L26 H25</h4><p>logit lens promotes: [&#x27;i&#x27;, &#x27;I&#x27;, &#x27;_i&#x27;, &#x27; Institute&#x27;, &#x27;い&#x27;, &#x27;iar&#x27;, &#x27;ι&#x27;, &#x27;ip&#x27;]; suppresses: [&#x27;.ToShort&#x27;, &#x27; yans&#x27;, &#x27;rvine&#x27;, &#x27;hế&#x27;, &#x27; 生命周期&#x27;, &#x27; Redistributions&#x27;, &#x27; nuest&#x27;, &#x27;FTER&#x27;]</p>
+<ul><li>31.413: aged the countryside around the castle in  [[1]] 252</li><li>30.416:  stone near the doorway has the date  [[1]] 798</li><li>30.045:  on the island or nearby in November  [[1]] 528</li><li>27.452:  . He was born in Minnesota in  [[1]] 802</li></ul>
+<h4>L9 H19</h4><p>logit lens promotes: [&#x27;attività&#x27;, &#x27;aley&#x27;, &#x27;绳&#x27;, &#x27;opportunità&#x27;, &#x27;Ionic&#x27;, &#x27;策&#x27;, &#x27;齑&#x27;, &#x27;-Owned&#x27;]; suppresses: [&#x27;来看看吧&#x27;, &#x27;半导&#x27;, &#x27;aeda&#x27;, &#x27;奖学&#x27;, &#x27; BusinessException&#x27;, &#x27;佣&#x27;, &#x27;广告服务&#x27;, &#x27;蹚&#x27;]</p>
+<ul><li>6.204:  the state built the easternmost mile ( [[ ]] 1 @.@</li><li>5.967:  Briggs was appointed by the court to defend [[ him]]  ; convinced by</li><li>5.743:  initiated for legal malpractice regarding Wally [[ &#x27;]] s letters that</li><li>5.671:  Antrim , Northern Ireland . His father [[ ,]]  James &quot; Jim</li></ul>
+<h4>L26 H24</h4><p>logit lens promotes: [&#x27;/I&#x27;, &#x27;(I&#x27;, &#x27;-I&#x27;, &#x27;伊&#x27;, &#x27;$I&#x27;, &#x27;,I&#x27;, &#x27;.I&#x27;, &#x27;/i&#x27;]; suppresses: [&#x27; (![&#x27;, &#x27; B&#x27;, &#x27;.Bunifu&#x27;, &#x27;ANTA&#x27;, &#x27;_MetaData&#x27;, &#x27;&gt;NN&#x27;, &#x27; BC&#x27;, &#x27;?&quot;;\n&#x27;]</p>
+<ul><li>28.371:  stone near the doorway has the date  [[1]] 798</li><li>26.975:  150 km / h ( [[ ]] 90 mph</li><li>26.772:  . He was born in Minnesota in  [[1]] 802</li><li>26.433:  on the island or nearby in November  [[1]] 528</li></ul>
