@@ -49,3 +49,15 @@ HackAPrompt, LLMail-Inject, Tensor Trust, InjecAgent and AgentDojo texts were no
 
 - protectai/deberta-v3-base-prompt-injection-v2 (Apache-2.0 on its card, opened 2026-11-25): used as an off-the-shelf baseline.
 - Qwen2.5-0.5B-Instruct and Qwen2.5-7B-Instruct (as in v1).
+
+## Amendment A1 (2026-11-26): real-world attack text (see PREREGISTRATION_V2.md, Amendment A1)
+
+| Source | Status | Licence as found | Use |
+|---|---|---|---|
+| LLMail-Inject (Microsoft), `microsoft/llmail-inject-challenge` on Hugging Face, commit 1063bdf, file `data/labelled_unique_submissions_phase1.json` | **used** | MIT (dataset card metadata) | 150 attack e-mails that triggered the send-email API, verbatim; e-mail addresses redacted to `[address]`. Family `llmail_real`. |
+| BIPIA text attacks (`benchmark/text_attack_{train,test}.json`, commit a004b69) | **used** | MIT (repo) | all 150 attack requests verbatim, family `bipia_real`. The code attacks were not used (they need a code judge). |
+| HackAPrompt, `hackaprompt/hackaprompt-dataset` | **not used** | card says MIT, but the files are gated (HF login + acceptance of conditions + sharing HF profile info); I did not accept conditions on the user's behalf | none. If the user obtains access, phrasings can be added as a further held-out family. |
+| Tensor Trust data, github.com/HumanCompatibleAI/tensor-trust-data (commit 747a75e) | **not used** | no LICENSE file, README states none, GitHub shows none | I cloned it to look, did not use any text. Needs the maintainers' permission or a stated licence. |
+| Gray Swan / UK AISI Agent Red Teaming benchmark (arXiv 2507.20526) | **not used** | the arXiv abstract page states no licence for the benchmark and gives no hosting location; `GraySwanAI/agent_red_teaming` and `gray-swan/agent_red_teaming` do not exist on Hugging Face (repository not found) | none; I did not find a public, research-licensed release. |
+
+No scraping of social platforms was done. The 12 synthetic families (above) remain the main set; the two real families are a separate supplementary set evaluated out-of-family and out-of-goal.
