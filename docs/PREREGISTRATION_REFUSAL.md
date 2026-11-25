@@ -76,3 +76,38 @@ Because the units behave like a general "refusal state" rather than a jailbreak-
 - **Side-effect-aware ranking.** score = culprit score minus lambda x penalty, lambda = 1 fixed now, not tuned. penalty = max(0, sign x mean predicted change of M when the unit is mean-patched on control prompts), by attribution patching. Control prompts: A, the 100 Alpaca direction prompts (harmless, refusal would rise); B, the 50 training harmful JBB behaviours (refusal would fall). Evaluated like the other arms (top-k, same patching, same held-out set, same side-effect sets) for neurons at k in {10, 50, 200} and heads at k in {5, 10, 20}. `mri.py fix --spec` uses it.
 
 Also noted: the platform and date groups in H6 are confounded with family composition (families come from different platforms and dates). H6 will be reported as pre-registered, with that caveat; no stratified test is added.
+
+---
+
+## Amendment 2 / errata (2026-11-26 UTC, after all results; written following an independent read-only audit)
+
+Nothing above this line is edited. This section corrects statements in the frozen text and discloses deviations. It changes no threshold and no verdict rule; it records how the verdicts were actually computed.
+
+**Corrections to statements above**
+1. "Status when written: the code is not yet written" is too strong. `refusal.py` is cited in this document, and 1,440 lines of it were committed 10 min 43 s after the pre-registration (beca19f 00:38:48 +0530; 102f448 00:49:31 +0530, 2026-11-26). The thresholds were frozen before any main-model result; the code was probably substantially drafted at that time.
+2. "baseline restore rate is 0 by construction" is wrong in practice. The measured no-patch rate (`baseline_outcome_rate`) is bypass 0.050 / 0.033 / 0.023 and over-refusal 0.027 / 0.000 / 0.087 for 0.5B / 1.5B / 7B, because greedy bf16 batched generation is not bit-reproducible (cell eligibility flips with batch composition, as already noted under known weaknesses). The README now reports these baselines.
+3. Amendment 1 header, "before any 1.5B or 7B result was produced": see the timing check below. It does not hold for 1.5B baseline generations; for 7B I did not check. Amendment 1's 0.5B numbers (0.741, random p95 0.070, diff-top-50 0.077) are from the 0.5B dev run; the committed 0.5B results are a re-run (0.730 / 0.074 / 0.073).
+4. Confirmatory status is ambiguous: the first paragraph names 1.5B and 7B as main models, the "Exploratory" list names "the 0.5B and 1.5B results". Read strictly, only 7B is confirmatory (0.5B is the dev model, 1.5B is listed both ways). The README states this.
+
+**Deviations of the code from this document** (all disclosed in the README "Deviations" section)
+- Bypass evaluation set: a cap of 40 eligible cells per template family (`cap_fam`), not a 250-cell seeded sample; n = 259 / 181 / 221.
+- H5a null: 300 draws, not 1000. H6a: 5,000 permutations, not 10,000.
+- H5a and H5b include the "unlabelled" template group; excluding it changes no verdict (J_between 0.322 / 0.456 / 0.444; rho 0.937 / 1.053 / 0.916).
+- An extra H6a test by family name was run; it is not pre-registered and is exploratory.
+- H4's rule "fewer than 30 eligible items is untestable" was not implemented in the original code, which printed H2 = false for 7B over-refusal (n = 23). The rule was added to `refusal.py` (`apply_min_n_rule`) and applied to the stored summaries with `reverdict_refusal.py`, using stored data only. 7B over-refusal H2 is therefore **untestable (n = 23 < 30)**, and its 0.609 reduction rate is descriptive only. Its criteria would not have been met anyway (units-minus-diff 95% CI [-0.087, +0.435]; unsafe-prompt compliance +28.0 pp).
+
+**Additional method notes** (not deviations): exact-patch effect CIs reuse the 24 training pairs that produced the ranking; the mean is taken at the last prompt token but imposed at every generated token; the Arditi comparison is partly circular because metric M includes the projection on that direction; six H6a tests are uncorrected; templates were de-duplicated by exact text only, so near-duplicate train/test leakage is possible and was not checked.
+
+**Timing check of the 1.5B baseline generations (metadata only; contents were not read).** Amendment 1 was committed at 3ee7656, 2026-11-26 01:28:56 +0530 = 2026-11-25 19:58:56 UTC. The Modal volume `injection-mri-refusal-results` lists these last-modified times (minute resolution, as printed in India Standard Time, UTC+5:30) for the 1.5B files `results_refusal/_private/Qwen__Qwen2.5-1.5B-Instruct/gens_*_n64.json`:
+
+| file | last modified (IST) | before 01:28:56 IST? |
+|---|---|---|
+| gens_plain | 2026-11-26 01:22 | yes |
+| gens_alpaca | 01:23 | yes |
+| gens_pool_train, gens_pool_val, gens_pool_test | 01:23 | yes |
+| gens_xs_unsafe | 01:24 | yes |
+| gens_wrapped_train | 01:29 | no (minute resolution; indistinguishable from the cutoff) |
+| gens_wrapped_val | 01:33 | no |
+| gens_wrapped_test | 01:35 | no |
+
+So six of the nine 1.5B baseline-generation files were last written before Amendment 1 was committed, which means 1.5B baseline generations (the unpatched model's outputs on plain, Alpaca and over-refusal-pool prompts) existed before Amendment 1, and the statement "before any 1.5B result was produced" is false for them. The times are last-modified times; the first write may have been earlier. No culprit-ranking or verification result is shown by these timestamps, and I did not check them. This is consistent with an earlier 1.5B run having populated the generation cache (a volume directory `r15_bypass`/`r15_over` exists; its contents were not inspected). The 7B generation files were not checked. The thresholds themselves were committed (beca19f 00:38:48 +0530) before every one of these files was written.
